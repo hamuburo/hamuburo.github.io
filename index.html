@@ -3,840 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>漢字穴埋め問題集</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2505781446931756"
+     crossorigin="anonymous"></script>
+<title>漢字穴埋めテスト - トップページ</title>
 <style>
   body {
     font-family: sans-serif;
     text-align: center;
     background-color: #fff9d6;
     margin: 20px;
+    line-height: 1.8;
   }
-  table {
-    border-collapse: collapse;
+  h1 {
+    margin-top: 20px;
+    font-size: 2em;
+  }
+  .container {
+    max-width: 800px;
     margin: 0 auto;
+    text-align: left;
+    background-color: #ffffffcc;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.15);
   }
-  td {
-    width: 80px;
-    height: 80px;
+  .center {
     text-align: center;
-    vertical-align: middle;
-    border: 2px solid black;
-    font-size: 50px;
-    font-weight: bold;
   }
-  .empty {
-    background-color: #fff9d6;
-    border: none;
+  a.button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.2em;
+    border-radius: 8px;
+    text-decoration: none;
   }
-  .blank {
-    background-color: white;
-  }
-  input[type="text"] {
-    font-size: 35px;
-    width: 80px;
-    height: 80px;
-    text-align: center;
-    border: none;
-    outline: none;
-  }
-  button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 20px;
-  }
-  .result {
-    margin-top: 10px;
-    font-weight: bold;
-    font-size: 22px;
-  }
-  .explanation {
-    margin-top: 10px;
-    font-size: 22spx;
-    text-align: left; /* ← 左寄せのまま */
-    display: none;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto; /* ← これを追加して中央配置 */
-  }
-  #ad-space {
-    margin: 20px 0;
+  a.button:hover {
+    background-color: #45a049;
   }
   footer {
     margin-top: 30px;
     font-size: 14px;
   }
+
+  /* スマホ用調整 */
+  @media (max-width: 600px) {
+    body {
+      margin: 10px;
+    }
+    .container {
+      padding: 15px;
+    }
+    h1 {
+      font-size: 1.5em;
+    }
+    a.button {
+      font-size: 1em;
+      padding: 10px 18px;
+    }
+  }
 </style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2505781446931756"
-     crossorigin="anonymous"></script>
 </head>
 <body>
 
-<h1>漢字穴埋め問題</h1>
+<h1>漢字穴埋め問題集</h1>
 
-<div id="quiz-area"></div>
+<div class="container">
+  <h2>このサイトについて</h2>
+  <p>「漢字穴埋め問題」は、上下左右に配置された熟語を完成させる漢字を当てる脳トレゲームです。<br>あなたの語彙力、漢字力、そしてひらめき力を試すことができます。</p>
+  
+  <h2>遊び方</h2>
+  <ol>
+    <li>中央のマスに入る漢字1文字を考えます。</li>
+    <li>上下左右それぞれの熟語が正しい漢字になるように答えを入力します。</li>
+    <li>答えを入力したら「答える」ボタンを押し、正解かどうかを確認します。</li>
+    <li>10問連続で挑戦できます。スコアを目指して頑張りましょう。</li>
+  </ol>
 
-<div class="result" id="result"></div>
-<div class="explanation" id="explanation"></div>
+  <h2>脳トレ効果</h2>
+  <p>漢字穴埋め問題は、短期記憶や言語処理能力を刺激し、脳の活性化に役立ちます。<br>特に高齢者の認知機能維持や、学生の語彙力向上に効果的です。</p>
 
-<div></div>
+  <div class="center">
+    <a href="game.html" class="button">ゲームを始める</a>
+  </div>
 </div>
-
-<button id="next-btn" style="display:none;">次の問題へ</button>
-<button id="retry-btn" style="display:none;">最初からやり直す</button>
-
+<!-- ゲーム開始ボタンの直下に追加 -->
+<div id="update-info" style="margin-top:20px; text-align:left; max-width:500px; margin-left:auto; margin-right:auto; background:#fff; padding:10px; border-radius:8px;">
+  <h3>📢 アプリ更新情報</h3>
+  <ul style="font-size:14px; line-height:1.6;">
+    <li>2025/08/15　スマホ版表示を改善しました。</li>
+    <li>2025/08/14　漢字穴埋め問題集を公開しました。</li>
+  </ul>
+</div>
 <footer>
-  <p>©啓次郎 | <a href="https://forms.gle/LbM6LAJCj1NV7XqH8" target="_blank">誤字誤答報告</a> | <a href="https://hamuburo.hatenablog.com/" target="_blank">とあるおっさんの戯言</a></p>
+  ©啓次郎 | <a href="privacy.html">プライバシーポリシー</a>
 </footer>
-
-<script>
-// ======== 問題データ（増やすときは同じ形式で追加） ========
-const questions = [
-  {
-    top: "会", left: "美", right: "笑", bottom: "合",
-    answer: "談", reading: "だん",
-    explanations: [
-      "<p><ruby><rb>会談</rb><rt>かいだん</rt></ruby>：会って話し合うこと。また、その話し合いのこと。</p>",
-      "<p><ruby><rb>美談</rb><rt>びだん</rt></ruby>：美しい話。聞いて心が温まる行い。</p>",
-      "<p><ruby><rb>談笑</rb><rt>だんしょう</rt></ruby>：打ち解けて楽しく語り合うこと。</p>",
-      "<p><ruby><rb>談合</rb><rt>だんごう</rt></ruby>：話し合い・相談。公共事業の入札談合は違法になる場合が多い。</p>"
-    ]
-  },
-  {
-    top: "人", left: "呑", right: "球", bottom: "圧",
-    answer: "気", reading: "き",
-    explanations: [
-      "<p><ruby><rb>人気</rb><rt>にんき</rt></ruby>：世間の評判。</p>",
-      "<p><ruby><rb>呑気</rb><rt>のんき</rt></ruby>：性格や気分がのんびりしていること。</p>",
-      "<p><ruby><rb>気球</rb><rt>ききゅう</rt></ruby>：空気より軽い気体を風船に詰め込む事で浮力を得る乗り物のこと。</p>",
-      "<p><ruby><rb>気圧</rb><rt>きあつ</rt></ruby>：大気の圧力。ふつう地上にかかる大気の重さをいい、1平方センチメートル当たり約1キログラム重に相当する。</p>"
-    ]
-  },
-  {
-    top: "気", left: "出", right: "目", bottom: "質",
-    answer: "品", reading: "ひん",
-    explanations: [
-      "<p><ruby><rb>気品</rb><rt>きひん</rt></ruby>：どことなく感じられる上品さ。</p>",
-      "<p><ruby><rb>出品</rb><rt>しゅっぴん</rt></ruby>：展覧会・陳列場などに、作品・物品を出すこと。</p>",
-      "<p><ruby><rb>品目</rb><rt>ひんもく</rt></ruby>：品物の目録・種目。</p>",
-      "<p><ruby><rb>品質</rb><rt>ひんしつ</rt></ruby>：品物の質。</p>"
-    ]
-  },
-  {
-    top: "火", left: "楽", right: "量", bottom: "具",
-    answer: "器", reading: "き",
-    explanations: [
-      "<p><ruby><rb>火器</rb><rt>かき</rt></ruby>：銃砲類の総称。また、火鉢など、火を入れて使う道具。</p>",
-      "<p><ruby><rb>楽器</rb><rt>がっき</rt></ruby>：音楽を演奏する為の音を出す器具。</p>",
-      "<p><ruby><rb>器量</rb><rt>きりょう</rt></ruby>：物の役に立つべき才能と徳。また、容貌や見た目。</p>",
-      "<p><ruby><rb>器具</rb><rt>きぐ</rt></ruby>：道具。</p>"
-    ]
-  },
-  {
-    top: "車", left: "同", right: "際", bottom: "側",
-    answer: "窓", reading: "まど",
-    explanations: [
-      "<p><ruby><rb>車窓</rb><rt>しゃそう</rt></ruby>：汽車・電車などの窓。</p>",
-      "<p><ruby><rb>同窓</rb><rt>どうそう</rt></ruby>：同じ学校または同じ先生に学んだこと。</p>",
-      "<p><ruby><rb>窓際</rb><rt>まどぎわ</rt></ruby>：窓に近いあたり。窓のそば。</p>",
-      "<p><ruby><rb>窓側</rb><rt>まどがわ</rt></ruby>：窓に近い場所や席などを意味する表現。</p>"
-    ]
-  },
-  {
-    top: "消", left: "烈", right: "急", bottom: "口",
-    answer: "火", reading: "ひ",
-    explanations: [
-      "<p><ruby><rb>消火</rb><rt>しょうか</rt></ruby>：火を消すこと。特に火災を消すこと。</p>",
-      "<p><ruby><rb>烈火</rb><rt>れっか</rt></ruby>：激しい勢いで燃える火。</p>",
-      "<p><ruby><rb>火急</rb><rt>かきゅう</rt></ruby>：火が燃え広がるように急なこと。一秒一分を争うほど急を要すること。</p>",
-      "<p><ruby><rb>火口</rb><rt>かこう</rt></ruby>：火山の噴火口。</p>"
-    ]
-  },
-  {
-    top: "石", left: "木", right: "酸", bottom: "素",
-    answer: "炭", reading: "すみ",
-    explanations: [
-      "<p><ruby><rb>石炭</rb><rt>せきたん</rt></ruby>：植物が地層の中で炭化したものの総称。</p>",
-      "<p><ruby><rb>木炭</rb><rt>もくたん</rt></ruby>：木を蒸し焼きにして炭化させた燃料。炭。</p>",
-      "<p><ruby><rb>炭酸</rb><rt>たんさん</rt></ruby>：二酸化炭素が水に溶けて生じる弱い酸。主に炭酸水の略語。</p>",
-      "<p><ruby><rb>炭素</rb><rt>たんそ</rt></ruby>：元素のひとつ。元素記号はC。カーボン。</p>"
-    ]
-  },
-  {
-    top: "大", left: "小", right: "腐", bottom: "乳",
-    answer: "豆", reading: "まめ",
-    explanations: [
-      "<p><ruby><rb>大豆</rb><rt>だいず</rt></ruby>：マメ科の一年草。種子はたんぱく質と脂肪が豊富で「畑の肉」とも呼ばれる。若い実は枝豆としてゆでて食べ、熟した種子は豆腐、味噌、醤油などに広く利用する。</p>",
-      "<p><ruby><rb>小豆</rb><rt>あずき</rt></ruby>：マメ科の一年草。種子からはあんこが作られる。</p>",
-      "<p><ruby><rb>豆腐</rb><rt>とうふ</rt></ruby>：大豆の加工食品。水に浸した大豆を砕いて煮た汁を布でこして豆乳を作り、ニガリなどを加えて固まらせたもの。</p>",
-      "<p><ruby><rb>豆乳</rb><rt>とうにゅう</rt></ruby>：水に浸した大豆をひき砕き、水を加えて煮て、ろ過した牛乳に似た白濁状の液体。</p>"
-    ]
-  },
-  {
-    top: "和", left: "聖", right: "人", bottom: "手",
-    answer: "歌", reading: "うた",
-    explanations: [
-      "<p><ruby><rb>和歌</rb><rt>わか</rt></ruby>：日本固有の形式による詩。長歌・短歌などの総称。特に、短歌。</p>",
-      "<p><ruby><rb>聖歌</rb><rt>せいか</rt></ruby>：宗教歌。特に、キリスト教の賛美歌。</p>",
-      "<p><ruby><rb>歌人</rb><rt>かじん</rt></ruby>：短歌、和歌を作る人。</p>",
-      "<p><ruby><rb>歌手</rb><rt>かしゅ</rt></ruby>：歌を歌うことを職業とする人。</p>"
-    ]
-  },
-  {
-    top: "病", left: "補", right: "落", bottom: "点",
-    answer: "欠", reading: "けつ",
-    explanations: [
-      "<p><ruby><rb>病欠</rb><rt>びょうけつ</rt></ruby>：病気のために欠席・欠勤すること。</p>",
-      "<p><ruby><rb>補欠</rb><rt>ほけつ</rt></ruby>：正規の要員の補充のために待機させてある人。控えの人。予備の人。</p>",
-      "<p><ruby><rb>欠落</rb><rt>けつらく</rt></ruby>：本来あるべき物が抜け落ちること。</p>",
-      "<p><ruby><rb>欠点</rb><rt>けってん</rt></ruby>：不十分・不完全で、非難の対象となるような点。短所。</p>"
-    ]
-  },
-  {
-    top: "落", left: "私", right: "録", bottom: "感",
-    answer: "語", reading: "ご",
-    explanations: [
-      "<p><ruby><rb>落語</rb><rt>らくご</rt></ruby>：大衆芸能の一種。噺家による滑稽さを中心とする日本独特の話芸。</p>",
-      "<p><ruby><rb>私語</rb><rt>しご</rt></ruby>：厳粛な場において、その場を取り仕切っている人物に断りなく、場の流れを乱すような会話をすること。</p>",
-      "<p><ruby><rb>語録</rb><rt>ごろく</rt></ruby>：ある人物の言葉を集めたもの。書物。</p>",
-      "<p><ruby><rb>語感</rb><rt>ごかん</rt></ruby>：言葉が与える、論理的意味以外の、主観的な印象。言葉のニュアンス。言葉に対する微妙な感覚。</p>"
-    ]
-  },
-  {
-    top: "新", left: "台", right: "雪", bottom: "船",
-    answer: "風", reading: "かぜ",
-    explanations: [
-      "<p><ruby><rb>新風</rb><rt>しんぷう</rt></ruby>：今までと違う新しいやり方や考え方。新しい感覚を持った手法。</p>",
-      "<p><ruby><rb>台風</rb><rt>だいふう</rt></ruby>：北太平洋西部の熱帯海上、北緯5～20度付近で発生し、最大風速が毎秒17.2メートル以上の熱帯低気圧。</p>",
-      "<p><ruby><rb>風雪</rb><rt>ふうせつ</rt></ruby>：風と雪。強い風を伴って降る雪。吹雪。また、厳しい苦難や試練のこと。</p>",
-      "<p><ruby><rb>風船</rb><rt>ふうせん</rt></ruby>：紙やゴムなどで作った球状の袋に、空気またはガスをつめて膨らませたもの。</p>"
-    ]
-  },
-  {
-    top: "水", left: "火", right: "作", bottom: "学",
-    answer: "力", reading: "ちから",
-    explanations: [
-      "<p><ruby><rb>水力</rb><rt>すいりょく</rt></ruby>：水の力。</p>",
-      "<p><ruby><rb>火力</rb><rt>かりょく</rt></ruby>：火の力。燃える火の強さ。火器の威力。</p>",
-      "<p><ruby><rb>力作</rb><rt>りきがく</rt></ruby>：力を込めて作った作品。</p>",
-      "<p><ruby><rb>力学</rb><rt>りきがく</rt></ruby>：物体間に働く力と運動との関係を研究する物理学の一分野。転じて人間関係などの力関係。</p>"
-    ]
-  },
-  {
-    top: "月", left: "栄", right: "道", bottom: "麗",
-    answer: "華", reading: "はな",
-    explanations: [
-      "<p><ruby><rb>月華</rb><rt>げっか</rt></ruby>：月と華。また、月の光。</p>",
-      "<p><ruby><rb>栄華</rb><rt>えいが</rt></ruby>：栄えときめくこと。権力や富貴をきわめていること。</p>",
-      "<p><ruby><rb>華道</rb><rt>かどう</rt></ruby>：草花や木の枝を花器に挿して鑑賞する技法や作法。生け花。</p>",
-      "<p><ruby><rb>華麗</rb><rt>かれい</rt></ruby>：華やかで美しいこと。また、そのさま。</p>"
-    ]
-  },
-  {
-    top: "鏡", left: "屋", right: "本", bottom: "紙",
-    answer: "台", reading: "だい",
-    explanations: [
-      "<p><ruby><rb>鏡台</rb><rt>きょうだい</rt></ruby>：鏡の付いた家具。ドレッサー。</p>",
-      "<p><ruby><rb>屋台</rb><rt>やたい</rt></ruby>：道路・広場などで立ち売りの商売をするための台を設けた、屋根付きの小さな店。</p>",
-      "<p><ruby><rb>台本</rb><rt>だいほん</rt></ruby>：演劇や映画、放送などで、演出の元となる、台詞や動きなどを書いた本。脚本。</p>",
-      "<p><ruby><rb>台紙</rb><rt>だいし</rt></ruby>：物を置いたり、写真や図画、印刷用の版下などを貼りつけたりするための紙。</p>"
-    ]
-  },
-  {
-    top: "半", left: "一", right: "満", bottom: "月",
-    answer: "円", reading: "えん",
-    explanations: [
-      "<p><ruby><rb>半円</rb><rt>はんえん</rt></ruby>：円または円周を直径で二等分したものの片方。</p>",
-      "<p><ruby><rb>一円</rb><rt>いちえん</rt></ruby>：ある程度広い範囲を表す言葉と共に使い、その地域全体を指す言葉。</p>",
-      "<p><ruby><rb>円満</rb><rt>えんまん</rt></ruby>：物事のようすや人柄などが、調和がとれていて穏やかなこと。また、完全に満ち足りていること。</p>",
-      "<p><ruby><rb>円月</rb><rt>えんげつ</rt></ruby>：満月のこと。「――輪」。</p>"
-    ]
-  },
-  {
-    top: "海", left: "西", right: "酒", bottom: "式",
-    answer: "洋", reading: "よう",
-    explanations: [
-      "<p><ruby><rb>海洋</rb><rt>かいよう</rt></ruby>：広くて大きい海。大洋。</p>",
-      "<p><ruby><rb>西洋</rb><rt>せいよう</rt></ruby>：日本や中国などから欧米の諸国をさしていう言葉。</p>",
-      "<p><ruby><rb>洋酒</rb><rt>ようしゅ</rt></ruby>：西洋から渡来した酒。また、西洋の製法に倣ならって造った酒。ウイスキー、ブランデー、ワイン、ビールなど。</p>",
-      "<p><ruby><rb>洋式</rb><rt>ようしき</rt></ruby>：西洋風のやり方、様式。西洋式。</p>"
-    ]
-  },
-  {
-    top: "女", left: "男", right: "勝", bottom: "美",
-    answer: "優", reading: "ゆう",
-    explanations: [
-      "<p><ruby><rb>女優</rb><rt>じょゆう</rt></ruby>：女性の俳優。</p>",
-      "<p><ruby><rb>男優</rb><rt>だんゆう</rt></ruby>：男性の俳優。</p>",
-      "<p><ruby><rb>優勝</rb><rt>ゆうしょう</rt></ruby>：競技などで第1位になること。</p>",
-      "<p><ruby><rb>優美</rb><rt>ゆうび</rt></ruby>：上品で美しいこと。淑しとやかで美しいこと。</p>"
-    ]
-  },
-  {
-    top: "天", left: "国", right: "重", bottom: "罰",
-    answer: "体", reading: "たい",
-    explanations: [
-      "<p><ruby><rb>天体</rb><rt>てんたい</rt></ruby>：太陽、恒星、惑星、衛星、彗星、星団、星雲など、宇宙に存在する物体の総称。</p>",
-      "<p><ruby><rb>国体</rb><rt>こくたい</rt></ruby>：国家の状態。国のあり方。国家の形態。また、国民体育大会の略。</p>",
-      "<p><ruby><rb>体重</rb><rt>たいじゅう</rt></ruby>：からだの重さ。</p>",
-      "<p><ruby><rb>体罰</rb><rt>たいばつ</rt></ruby>：肉体に直接苦痛を与える罰。</p>"
-    ]
-  },
-  {
-    top: "口", left: "自", right: "案", bottom: "弁",
-    answer: "答", reading: "とう",
-    explanations: [
-      "<p><ruby><rb>口答</rb><rt>こうとう</rt></ruby>：口で答えること。</p>",
-      "<p><ruby><rb>自答</rb><rt>じとう</rt></ruby>：自分で答えること。</p>",
-      "<p><ruby><rb>答案</rb><rt>とうあん</rt></ruby>：出された問題に対して書いた答え。また、その答えの書かれた用紙。</p>",
-      "<p><ruby><rb>答弁</rb><rt>とうべん</rt></ruby>：質問に答えて説明すること。また、その説明。</p>"
-    ]
-  },
-  {
-    top: "風", left: "黄", right: "砂", bottom: "竜",
-    answer: "土", reading: "つち",
-    explanations: [
-      "<p><ruby><rb>風土</rb><rt>ふうど</rt></ruby>：その土地の気候、地味、地勢などのありさま。また、人の文化の形成などに影響を及ぼす精神的な環境。</p>",
-      "<p><ruby><rb>黄土</rb><rt>おうど</rt></ruby>：風で運ばれて堆積した淡黄色または灰黄色の細粒の土。また、珪酸けいさんアルミニウムに酸化鉄を含んだもの。</p>",
-      "<p><ruby><rb>土砂</rb><rt>どしゃ</rt></ruby>：土と砂。</p>",
-      "<p><ruby><rb>土竜</rb><rt>もぐら</rt></ruby>：もぐら。モグラ科の哺乳類。体長約15センチで尾は短い。毛は黒褐色のビロード状。地中にすみ、目は退化している。前足は大きくシャベル状で、地表近くをトンネルを掘って進み、ミミズなどを食べる。土中を掘る速度は1分間に30cmと言われている。</p>"
-    ]
-  },
-  {
-    top: "罰", left: "砂", right: "棒", bottom: "庫",
-    answer: "金", reading: "きん",
-    explanations: [
-      "<p><ruby><rb>罰金</rb><rt>ばっきん</rt></ruby>：罰として出させる金銭。</p>",
-      "<p><ruby><rb>砂金</rb><rt>さきん</rt></ruby>：金鉱脈が浸食されて、細かく粒になった金が水に流され、砂などと共に河床や海岸に沈積したもの。</p>",
-      "<p><ruby><rb>金棒</rb><rt>かなぼう</rt></ruby>：鉄製の棒。特に、<ruby><rb>鉄尖棒</rb><rt>かなさいぼう</rt></ruby>と呼ばれる太い鉄棒の周囲に多くの鋭い突起がある武器。</p>",
-      "<p><ruby><rb>金庫</rb><rt>きんこ</rt></ruby>：金銭・貴重品・重要書類等を入れ、盗難・火難などを防ぐ、鍵のかかる鉄製の入れ物。</p>"
-    ]
-  },
-  {
-    top: "素", left: "空", right: "術", bottom: "足",
-    answer: "手", reading: "て",
-    explanations: [
-      "<p><ruby><rb>素手</rb><rt>すで</rt></ruby>：何も持っていない手。</p>",
-      "<p><ruby><rb>空手</rb><rt>からて</rt></ruby>：沖縄から伝わった一種の拳法けんぽう。突き・受け・蹴りの三方法を基本とする。</p>",
-      "<p><ruby><rb>手術</rb><rt>しゅじゅつ</rt></ruby>：医者がメスなどを用い、患部を切開したり切断・摘出したりして回復させる治療法。オペ。</p>",
-      "<p><ruby><rb>手足</rb><rt>てあし</rt></ruby>：手と足。また、比喩的に自分の思い通りに動く部下などを指す。</p>"
-    ]
-  },
-  {
-    top: "合", left: "手", right: "毛", bottom: "化",
-    answer: "羽", reading: "はね",
-    explanations: [
-      "<p><ruby><rb>合羽</rb><rt>かっぱ</rt></ruby>：雨天用のマント。</p>",
-      "<p><ruby><rb>手羽</rb><rt>てば</rt></ruby>：鶏の羽の付け根部分の肉。上腕の部分を手羽元、残りを手羽先ともいう。手羽肉。</p>",
-      "<p><ruby><rb>羽毛</rb><rt>うもう</rt></ruby>：鳥のはね。また、鳥の柔らかな綿毛。</p>",
-      "<p><ruby><rb>羽化</rb><rt>うか</rt></ruby>：昆虫が、<ruby><rb>蛹</rb><rt>さなぎ</rt></ruby>や幼虫から、成虫になること。</p>"
-    ]
-  },
-  {
-    top: "博", left: "割", right: "想", bottom: "人",
-    answer: "愛", reading: "あい",
-    explanations: [
-      "<p><ruby><rb>博愛</rb><rt>はくあい</rt></ruby>：すべての人を平等に愛すること。</p>",
-      "<p><ruby><rb>割愛</rb><rt>かつあい</rt></ruby>：惜しいと思うものを、思いきって捨てたり、手放したりすること。ただ、現在は本来の意味でない「不必要なものを切り捨てる」という意味で使う人の割合の方が多い。</p>",
-      "<p><ruby><rb>愛想</rb><rt>あいそ</rt></ruby>：人に接するときの態度。また、人当たりのいい態度。また、人に対する好意や信頼感のこと。</p>",
-      "<p><ruby><rb>愛人</rb><rt>あいじん</rt></ruby>：愛するいとしい人。また、性的な関係にある相手。情婦。情夫。情人。不倫相手を指すことが多い。</p>"
-    ]
-  },
-  {
-    top: "赤", left: "青", right: "才", bottom: "門",
-    answer: "鬼", reading: "おに",
-    explanations: [
-      "<p><ruby><rb>赤鬼</rb><rt>あかおに</rt></ruby>：仏教、陰陽道に基づく想像上の怪物「鬼」のうち、全身が赤い個体。</p>",
-      "<p><ruby><rb>青鬼</rb><rt>あおおに</rt></ruby>：仏教、陰陽道に基づく想像上の怪物「鬼」のうち、全身が青い個体。</p>",
-      "<p><ruby><rb>鬼才</rb><rt>きさい</rt></ruby>：人間とは思えないほどの鋭い才能。また、その持ち主。</p>",
-      "<p><ruby><rb>鬼門</rb><rt>きもん</rt></ruby>：北東の方角。陰陽道で、邪悪な鬼が出入りするとして忌み嫌われる方角。また、転じていくと悪いことに出会う場所を指す。</p>"
-    ]
-  },
-  {
-    top: "神", left: "成", right: "像", bottom: "教",
-    answer: "仏", reading: "ほとけ",
-    explanations: [
-      "<p><ruby><rb>神仏</rb><rt>しんぶつ</rt></ruby>：神と仏。神道と仏教。</p>",
-      "<p><ruby><rb>成仏</rb><rt>じょうぶつ</rt></ruby>：死んでこの世に未練を残さず、仏となること。霊がこの世から去り、天に召されること。また、煩悩を断ち、無上の悟りを開くことをいう。</p>",
-      "<p><ruby><rb>仏像</rb><rt>ぶつぞう</rt></ruby>：礼拝の対象として製作された仏の彫像。また、画像を指す。</p>",
-      "<p><ruby><rb>仏教</rb><rt>ぶっきょう</rt></ruby>：紀元前500年頃、釈迦が創始した宗教。2016年の調査によれば、日本の仏教系の信者数は8770万人と言われる。</p>"
-    ]
-  },
-  {
-    top: "善", left: "不", right: "薬", bottom: "好",
-    answer: "良", reading: "りょう",
-    explanations: [
-      "<p><ruby><rb>善良</rb><rt>ぜんりょう</rt></ruby>：性質の良い事。また、性質が穏やかで素直なこと。</p>",
-      "<p><ruby><rb>不良</rb><rt>ふりょう</rt></ruby>：品質、状態などが良くないこと。また、品行や性質が良くないこと。またその人。</p>",
-      "<p><ruby><rb>良薬</rb><rt>りょうやく</rt></ruby>：良く効く薬。妙薬。</p>",
-      "<p><ruby><rb>良好</rb><rt>りょうこう</rt></ruby>：良いこと。好ましい状態であること。</p>"
-    ]
-  },
-  {
-    top: "遠", left: "地", right: "鳴", bottom: "雨",
-    answer: "雷", reading: "かみなり",
-    explanations: [
-      "<p><ruby><rb>遠雷</rb><rt>えんらい</rt></ruby>：遠くの方で鳴る雷。</p>",
-      "<p><ruby><rb>地雷</rb><rt>じらい</rt></ruby>：地中に埋め、踏むと爆発して人や車両を殺傷、破壊する兵器。また、転じて会話の際に相手にとって禁句となるような話題のこと。</p>",
-      "<p><ruby><rb>雷鳴</rb><rt>らいめい</rt></ruby>：雷の鳴り響く音のこと。</p>",
-      "<p><ruby><rb>雷雨</rb><rt>らいう</rt></ruby>：雷鳴を<ruby><rb>伴</rb><rt>ともな</rt></ruby>った激しい雨のこと。</p>"
-    ]
-  },
-  {
-    top: "進", left: "海", right: "軍", bottom: "道",
-    answer: "水", reading: "みず",
-    explanations: [
-      "<p><ruby><rb>進水</rb><rt>しんすい</rt></ruby>：船体の出来上がった新造船を陸上から水面に浮かべること。「――式」。</p>",
-      "<p><ruby><rb>海水</rb><rt>かいすい</rt></ruby>：海の水。1kgあたり平均35gの塩分を含んでいる。</p>",
-      "<p><ruby><rb>水軍</rb><rt>すいぐん</rt></ruby>：古代から近世にかけての水上武力集団の総称。戦国時代、瀬戸内海の広い地域を支配していた村上水軍などが有名。</p>",
-      "<p><ruby><rb>水道</rb><rt>すいどう</rt></ruby>：川や湖やダムの水を引いて、飲料水などにするための施設、および配管や蛇口などそのシステム全般を指す。主に上水道の意味で使われる。</p>"
-    ]
-  },
-  {
-    top: "戦", left: "天", right: "宝", bottom: "士",
-    answer: "国", reading: "くに",
-    explanations: [
-      "<p><ruby><rb>戦国</rb><rt>せんごく</rt></ruby>：戦争で混乱した世の中。群雄割拠して天下を争う状態。また、主に日本の戦国時代の略で使用される。</p>",
-      "<p><ruby><rb>天国</rb><rt>てんごく</rt></ruby>：神様や天使などがいるとされる天上の理想世界。転じてそこで暮らす人々にとって理想的な世界を指す。楽園。</p>",
-      "<p><ruby><rb>国宝</rb><rt>こくほう</rt></ruby>：国の宝。日本では重要文化財のうち、特に文化史的価値の高い建築物、美術品、工芸品、古文書などを文部科学大臣が指定し、国が保護し、管理している。</p>",
-      "<p><ruby><rb>国士</rb><rt>こくし</rt></ruby>：国家の為に身命を投げ打って尽くす人物。また、その国で特に優れた人物を指す。</p>"
-    ]
-  },
-  {
-    top: "雑", left: "野", right: "木", bottom: "案",
-    answer: "草", reading: "くさ",
-    explanations: [
-      "<p><ruby><rb>雑草</rb><rt>ざっそう</rt></ruby>：自然に生えている色々な草。名前も分からない雑多な草。また、生命力、生活力が強いことの例え。</p>",
-      "<p><ruby><rb>野草</rb><rt>やそう</rt></ruby>：野山に生えている草。</p>",
-      "<p><ruby><rb>草木</rb><rt>くさき</rt></ruby>：草と木。</p>",
-      "<p><ruby><rb>草案</rb><rt>そうあん</rt></ruby>：文章、特に規約や法律などの下書き、原案。</p>"
-    ]
-  },
-  {
-    top: "緑", left: "紅", right: "道", bottom: "室",
-    answer: "茶", reading: "ちゃ",
-    explanations: [
-      "<p><ruby><rb>緑茶</rb><rt>りょくちゃ</rt></ruby>：茶の若芽を蒸気で蒸して酸化酵素の働きを失わせ、緑色を保たせた茶。発酵させない茶。<ruby><rb>煎茶</rb><rt>せんちゃ</rt></ruby>、<ruby><rb>抹茶</rb><rt>まっちゃ</rt></ruby>など、日本で普通に飲まれる茶。</p>",
-      "<p><ruby><rb>紅茶</rb><rt>こうちゃ</rt></ruby>：茶の若葉を摘み取って、<ruby><rb>萎凋</rb><rt>いちよう</rt></ruby>、<ruby><rb>揉捻</rb><rt>じゆうねん<rt></ruby>、発酵、乾燥させて作った茶。煎汁は澄んだ赤茶色になる。17世紀に中国茶が西洋に伝わり広まった。インドやスリランカが主産地。日本には明治以降伝わった。</p>",
-      "<p><ruby><rb>茶道</rb><rt>さどう</rt></ruby>：茶の湯によって精神を修養し礼法を究める道。鎌倉時代の禅寺での喫茶の儀礼を起源として、室町時代の<ruby><rb>村田</rb><rt>むらた</rt></ruby><ruby><rb>珠光</rb><rt>じゅこう</rt></ruby>に始まり、<ruby><rb>武野</rb><rt>たけの</rt></ruby><ruby><rb>紹鴎</rb><rt>じょうおう</rt></ruby>を経て<ruby><rb>千利休</rb><rt>せんのりきゅう</rt></ruby>が大成、<ruby><rb>侘茶</rb><rt>わびちゃ</rt></ruby>として広まった。</p>",
-      "<p><ruby><rb>茶室</rb><rt>ちゃしつ</rt></ruby>：茶の湯のための部屋。</p>"
-    ]
-  },
-  {
-    top: "空", left: "独", right: "夜", bottom: "滝",
-    answer: "白", reading: "しろ",
-    explanations: [
-      "<p><ruby><rb>空白</rb><rt>くうはく</rt></ruby>：書類や答案などの書き込むべきところに、何も書いていないこと。また、継続しているものの中で一部分が欠けていること。その期間や概念。</p>",
-      "<p><ruby><rb>独白</rb><rt>どくはく</rt></ruby>：独り言を言うこと。また、演劇などで登場人物が単独で自身の想いや状況を語ること。また、その台詞。</p>",
-      "<p><ruby><rb>白夜</rb><rt>びゃくや</rt></ruby>：南極や北極に近い地方で、夏の期間に真夜中でもぼんやりと明るく、日が沈まない現象のこと。</p>",
-      "<p><ruby><rb>白滝</rb><rt>しらたき</rt></ruby>：ごく細く作ったこんにゃく。すき焼きや水炊きなどの鍋物の具材として使われる。また、白い布を広げたように見える滝。山形県米沢市の大樽川渓谷には白布大滝と呼ばれる美しい滝がある。</p>"
-    ]
-  },
-  {
-    top: "陰", left: "残", right: "術", bottom: "者",
-    answer: "忍", reading: "にん",
-    explanations: [
-      "<p><ruby><rb>隠忍</rb><rt>いんにん</rt></ruby>：苦しみを心中に隠して堪え忍ぶこと。</p>",
-      "<p><ruby><rb>残忍</rb><rt>ざんにん</rt></ruby>：むごいことを平気でするさま。</p>",
-      "<p><ruby><rb>忍術</rb><rt>にんじゅつ</rt></ruby>：忍びの術。特殊な体術や変装や潜入の技術をもとに密かに敵地を偵察したり、敵を暗殺したする武術。甲賀流、伊賀流、戸隠流が有名。</p>",
-      "<p><ruby><rb>忍者</rb><rt>にんじゃ</rt></ruby>：忍びの者。忍術を使って偵察、謀略、後方攪乱、暗殺などを行う者。戦国時代、各家に抱えられて活躍した。戦国時代の服部半蔵や風魔小太郎は実在の人物であるが、霧隠才蔵や猿飛佐助は架空の人物。</p>"
-    ]
-  },
-  {
-    top: "悪", left: "巨", right: "文", bottom: "字",
-    answer: "漢", reading: "かん",
-    explanations: [
-      "<p><ruby><rb>悪漢</rb><rt>あっかん</rt></ruby>：悪いことをする男。悪者。悪党。パズー「ーーに追われてるんだ！」</p>",
-      "<p><ruby><rb>巨漢</rb><rt>きょかん</rt></ruby>：人よりも並外れて身体の大きな男。大男。</p>",
-      "<p><ruby><rb>漢文</rb><rt>かんぶん</rt></ruby>：漢字のみで書かれた中国古来の文書。</p>",
-      "<p><ruby><rb>漢字</rb><rt>かんじ</rt></ruby>：中国で作られ、今もなお使用される文字。中国や日本で使用されている。日本の平仮名やカタカナは漢字を元に作り出された。</p>"
-    ]
-  },
-  {
-    top: "古", left: "土", right: "霊", bottom: "刀",
-    answer: "木", reading: "き",
-    explanations: [
-      "<p><ruby><rb>古木</rb><rt>こぼく</rt></ruby>：長い年月を経た木。老木。</p>",
-      "<p><ruby><rb>土木</rb><rt>どぼく</rt></ruby>：土と木。また、土石、木材、鉄材などを使って道路や鉄道、河川、橋などを作る建築工事を指す土木工事の略。</p>",
-      "<p><ruby><rb>木霊</rb><rt>こだま</rt></ruby>：樹木に宿る精霊。また、山などで起こる音の反響のこと。やっほー。</p>",
-      "<p><ruby><rb>木刀</rb><rt>ぼくとう</rt></ruby>：木で作った刀。木剣のこと。何故か観光地でお土産物としてよく売られている。お土産に木刀欲しいですか？　僕の妻は中学の修学旅行で買って帰り、お母さんにしこたま怒られたそうです。</p>"
-    ]
-  },
-  {
-    top: "散", left: "進", right: "行", bottom: "兵",
-    answer: "歩", reading: "ほ",
-    explanations: [
-      "<p><ruby><rb>散歩</rb><rt>さんぽ</rt></ruby>：気晴らしや健康のために、のんびりと歩くこと。散策。</p>",
-      "<p><ruby><rb>進歩</rb><rt>しんぽ</rt></ruby>：物事が良い方向に進んでいくこと。</p>",
-      "<p><ruby><rb>歩行</rb><rt>ほこう</rt></ruby>：歩いて行くこと。</p>",
-      "<p><ruby><rb>歩兵</rb><rt>ほへい</rt></ruby>：徒歩で戦う兵士。兵種の一種で主に近接武器をもって戦う。また、将棋の<ruby><rb>歩</rb><rt>ふ</rt></ruby>のこと。</p>"
-    ]
-  },
-  {
-    top: "大", left: "小", right: "天", bottom: "裏",
-    answer: "脳", reading: "のう",
-    explanations: [
-      "<p><ruby><rb>大脳</rb><rt>だいのう</rt></ruby>：脳の主要部分。左右の大脳半球とそれを結ぶ<ruby><rb>脳梁</rb><rt>のうりょう</rt></ruby>があり、半球の表面には多数のしわやひだがある。表層は大脳皮質で覆われ、内部は<ruby><rb>白質</rb><rt>はくしつ</rt></ruby>と呼ばれ、有髄神経繊維が密集している。</p>",
-      "<p><ruby><rb>小脳</rb><rt>しょうのう</rt></ruby>：<ruby><rb>延髄</rb><rt>えんずい</rt></ruby>と<ruby><rb>橋</rb><rt>きょう</rt></ruby>の背面にあるしわ多い<ruby><rb>脳髄</rb><rt>のうずい</rt></ruby>。表層は灰白質で小脳皮質と呼ばれ、中心部は神経繊維の集まった<ruby><rb>白質</rb><rt>はくしつ</rt></ruby>。体の各部の筋運動の調節と平衡を<ruby><rb>司</rb><rt>つかさ</rt></ruby>どる。</p>",
-      "<p><ruby><rb>脳天</rb><rt>のうてん</rt></ruby>：頭のてっぺん。頭頂部。</p>",
-      "<p><ruby><rb>脳裏</rb><rt>のうり</rt></ruby>：頭の中。心の中。</p>"
-    ]
-  },
-  {
-    top: "牛", left: "母", right: "母", bottom: "牛",
-    answer: "乳", reading: "にゅう",
-    explanations: [
-      "<p><ruby><rb>牛乳</rb><rt>ぎゅうにゅう</rt></ruby>：牛の乳。白色の液体で、脂肪、たんぱく質、糖分などの栄養が豊富。殺菌などの処理を経た上で飲料として流通している。また、バター、チーズ、ヨーグルト、酸乳飲料などの原料となる。英語でいうとmilk。</p>",
-      "<p><ruby><rb>母乳</rb><rt>ぼにゅう</rt></ruby>：母親の乳。</p>",
-      "<p><ruby><rb>乳母</rb><rt>うば</rt></ruby>：母親に代わって子供に乳を飲ませ、面倒をみる女性のこと。現代のような乳児用のミルクが流通していない時代では、母親の母乳の出の悪さは乳児の成長に大きな影響を与える為、皇族や貴族、名のある武家や商家などで召し抱えていた。</p>",
-      "<p><ruby><rb>乳牛</rb><rt>にゅうぎゅう</rt></ruby>：乳を取るために飼う牛。</p>"
-    ]
-  },
-  {
-    top: "生", left: "運", right: "運", bottom: "中",
-    answer: "命", reading: "いのち",
-    explanations: [
-      "<p><ruby><rb>生命</rb><rt>せいめい</rt></ruby>：生物が生物でありつづける根源。いのち。また、ある方面で活躍し続けることができる根源。「役者――」「選手――」</p>",
-      "<p><ruby><rb>運命</rb><rt>うんめい</rt></ruby>：人間の意志を超越して人に幸不幸を与える力。また、その力によって巡ってくる幸不幸の巡り合わせ。また、定められた未来。さだめ。</p>",
-      "<p><ruby><rb>命運</rb><rt>めいうん</rt></ruby>：身の定め。巡り合わせ。その物事の存続に関わる重大な事象や力。</p>",
-      "<p><ruby><rb>命中</rb><rt><めいちゅう</rt></ruby>：弾丸や矢などが、狙った所に当たること。的中。命中率70%だとだいたい外れるが、被弾率70%だと大体当たる。</p>"
-    ]
-  },
-  {
-    top: "救", left: "船", right: "荷", bottom: "血",
-    answer: "出", reading: "しゅつ",
-    explanations: [
-      "<p><ruby><rb>救出</rb><rt>きゅうしゅつ</rt></ruby>：危険な状態から救い出すこと。</p>",
-      "<p><ruby><rb>船部</rb><rt>ふなで</rt></ruby>：船が港を出ること。また、新しい生活などを始めること。</p>",
-      "<p><ruby><rb>出荷</rb><rt>しゅっか</rt></ruby>：荷を積み出すこと。特に、商品を小売店などに発送すること。</p>",
-      "<p><ruby><rb>出血</rb><rt>しゅっけつ</rt></ruby>：血液が血管の外に流れ出ること。主に、血液が体外に出る外出血の意味で使われる。</p>"
-    ]
-  },
-  {
-    top: "竹", left: "乗", right: "車", bottom: "子",
-    answer: "馬", reading: "うま",
-    explanations: [
-      "<p><ruby><rb>竹馬</rb><rt>たけうま</rt></ruby>：二本の竹竿の適当な高さの所にそれぞれ足掛かりをつけ、それに乗って歩くようにしたもの。子供の遊具。</p>",
-      "<p><ruby><rb>乗馬</rb><rt>じょうば</rt></ruby>：馬に乗ること。</p>",
-      "<p><ruby><rb>馬車</rb><rt>ばしゃ</rt></ruby>：馬にひかせて、人や荷物を運ぶ車。</p>",
-      "<p><ruby><rb>馬子</rb><rt>まご</rt></ruby>：馬に人や荷をのせて運搬することを職業とする人。</p>"
-    ]
-  },
-  {
-    top: "短", left: "長", right: "在", bottom: "存",
-    answer: "所", reading: "ところ",
-    explanations: [
-      "<p><ruby><rb>短所</rb><rt>たんしょ</rt></ruby>：劣っているところ。欠点。また、人の性質などで良くない面のこと。</p>",
-      "<p><ruby><rb>長所</rb><rt>ちょうしょ</rt></ruby>：優れているところ、特に人や物の性質や性能などで、良い面のこと。</p>",
-      "<p><ruby><rb>所在</rb><rt>しょざい</rt></ruby>：物事が存在する所。また、人が居る場所のこと。</p>",
-      "<p><ruby><rb>所存</rb><rt>しょぞん</rt></ruby>：心に思うところ。考え。</p>"
-    ]
-  },
-  {
-    top: "悪", left: "兵", right: "所", bottom: "者",
-    answer: "役", reading: "やく",
-    explanations: [
-      "<p><ruby><rb>悪役</rb><rt>あくやく</rt></ruby>：映画や芝居などの悪人の役。敵役。また、転じて人に憎まれる役回りを指す。</p>",
-      "<p><ruby><rb>兵役</rb><rt>へいえき</rt></ruby>：軍籍に入り一定期間軍務につくこと。国によっては一定期間に義務的に課せられる。</p>",
-      "<p><ruby><rb>役所</rb><rt>やくしょ</rt></ruby>：役人が公務を取り扱う所。官公庁。</p>",
-      "<p><ruby><rb>役者</rb><rt>やくしゃ</rt></ruby>：演劇、ドラマ、映画、芝居などで登場人物を演じる人。俳優。</p>"
-    ]
-  },
-  {
-    top: "無", left: "天", right: "歴", bottom: "人",
-    answer: "職", reading: "しょく",
-    explanations: [
-      "<p><ruby><rb>無職</rb><rt>むしょく</rt></ruby>：定まった職のないこと。無職業のこと。</p>",
-      "<p><ruby><rb>天職</rb><rt>てんしょく</rt></ruby>：天から授かった職業。また、その人の天性に最も合った職業のこと。</p>",
-      "<p><ruby><rb>職歴</rb><rt>しょくれき</rt></ruby>：職業や職務についての経歴。</p>",
-      "<p><ruby><rb>職人</rb><rt>しょくにん</rt></ruby>：大工、左官、飾り職、植木屋などのように、身につけた技術によって物を作り出したりする職業の人。転じて、その道の専門家。</p>"
-    ]
-  },
-  {
-    top: "母", left: "子", right: "声", bottom: "感",
-    answer: "音", reading: "おと",
-    explanations: [
-      "<p><ruby><rb>母音</rb><rt>ぼいん</rt></ruby>：言語音の分類のひとつ。声帯の振動で生じた有声の呼気が、咽頭や口腔内の通路で閉鎖や狭めをうけずに響きよく発せられる音。現代日本語の共通語では、『あ』、『い』、『う』、『え』、『お』の5つに区分される。</p>",
-      "<p><ruby><rb>子音</rb><rt>しいん</rt></ruby>：言語音の分類のひとつ。発音の際に発音器官のどこかで閉鎖、摩擦、せばめなど、呼気の妨げがある音。声帯の振動を伴うか否かにより、有声子音（g、z、 d、 b など）と無声子音（k、s、t、p など）に分けられる。</p>",
-      "<p><ruby><rb>音声</rb><rt>おんせい</rt></ruby>：人の声。人間が意思を伝達するために口から発する音。言語音。</p>",
-      "<p><ruby><rb>音感</rb><rt>おんかん</rt></ruby>：音に対する感覚。音の高低、音色ねいろなどを聴き分ける能力。</p>"
-    ]
-  },
-  {
-    top: "平", left: "瞬", right: "速", bottom: "折",
-    answer: "時", reading: "とき",
-    explanations: [
-      "<p><ruby><rb>平時</rb><rt>へいじ</rt></ruby>：変わったことのない時。平常。普段。また、戦争などがない平和な時を指す。</p>",
-      "<p><ruby><rb>瞬時</rb><rt>しゅんじ</rt></ruby>：ほんのわずかな時間。瞬間。</p>",
-      "<p><ruby><rb>時速</rb><rt>じそく</rt></ruby>：1時間あたりに進む距離で表した速度。距離÷時間で求める。</p>",
-      "<p><ruby><rb>時折</rb><rt>ときおり</rt></ruby>：ときどき。ときたま。</p>"
-    ]
-  },
-  {
-    top: "多", left: "感", right: "罪", bottom: "意",
-    answer: "謝", reading: "しゃ",
-    explanations: [
-      "<p><ruby><rb>多謝</rb><rt>たしゃ</rt></ruby>：深く感謝をすること。また、深くお詫びをすること。</p>",
-      "<p><ruby><rb>感謝</rb><rt>かんしゃ</rt></ruby>：ありがたいと思う気持ちを表すこと。また、その気持ち。</p>",
-      "<p><ruby><rb>謝罪</rb><rt>しゃざい</rt></ruby>：罪や<ruby><rb>過</rb><rt>あやま</rt><ruby>ちを詫びること。</p>",
-      "<p><ruby><rb>謝意</rb><rt>しゃい</rt></ruby>：感謝の気持ち。また、自分の<ruby><rb>過</rb><rt>あやま</rt><ruby>ちを詫びる気持ち。</p>"
-    ]
-  },
-  {
-    top: "時", left: "合", right: "算", bottom: "画",
-    answer: "計", reading: "けい",
-    explanations: [
-      "<p><ruby><rb>時計</rb><rt>とけい</rt></ruby>：時刻を知り、また、時間の長さの測る為の装置。日時計、砂時計、水時計、機械時計などがある。</p>",
-      "<p><ruby><rb>合計</rb><rt>ごうけい</rt></ruby>：いくつかあるものを数え合わせること。また、その数え合わせたもの。</p>",
-      "<p><ruby><rb>計算</rb><rt>けいさん</rt></ruby>：物の数量を計り数えること。加減乗除など、数式に従って処理し数値を引き出すこと。また、結果や成り行きをある程度予測し、それを予定の一部に入れて考えることを指す。</p>",
-      "<p><ruby><rb>計画</rb><rt>けいかく</rt></ruby>：ある事を行う為に、あらかじめ方法や順序などを考えること。また、その考えの内容。</p>"
-    ]
-  },
-  {
-    top: "肉", left: "両", right: "指", bottom: "切",
-    answer: "親", reading: "おや",
-    explanations: [
-      "<p><ruby><rb>肉親</rb><rt>にくしん</rt></ruby>：親子、兄弟、姉妹などのように、自分と血縁関係にある者。</p>",
-      "<p><ruby><rb>両親</rb><rt>りょうしん</rt></ruby>：父親と母親。</p>",
-      "<p><ruby><rb>親指</rb><rt>おやゆび</rt></ruby>：手足の五本の指の一。五本の端にあって最も太い指。自然体の時、最も身体の内側にある指。</p>",
-      "<p><ruby><rb>新設</rb><rt>しんせつ</rt></ruby>：人情が厚いこと。好意をもって人の為に尽くすこと。思いやりを持って人に接する精神。</p>"
-    ]
-  },
-  {
-    top: "新", left: "中", right: "中", bottom: "初",
-    answer: "年", reading: "ねん",
-    explanations: [
-      "<p><ruby><rb>新年</rb><rt>しんねん</rt></ruby>：新しい年。年のはじめ。正月。</p>",
-      "<p><ruby><rb>中年</rb><rt>ちゅうねん</rt></ruby>：青年と老年との間。現代では、だいたい40歳代から50歳代にかけてをいう。</p>",
-      "<p><ruby><rb>年中</rb><rt>ねんじゅう</rt></ruby>：いつも。始終。絶えず同じ状態や行為が続くさま。</p>",
-      "<p><ruby><rb>年初</rb><rt>ねんしょ</rt></ruby>：年のはじめ。年頭。年始。</p>"
-    ]
-  },
-  {
-    top: "月", left: "北", right: "地", bottom: "光",
-    answer: "極", reading: "きょく",
-    explanations: [
-      "<p><ruby><rb>月極</rb><rt>つきぎめ</rt></ruby>：一ヶ月にいくらと決めて契約をすること。</p>",
-      "<p><ruby><rb>北極</rb><rt>ほっきょく</rt></ruby>：地軸が北半球で地表と交わる点。北緯90度の地点。北極海のほぼ中央にある。北極点とも言う。</p>",
-      "<p><ruby><rb>極地</rb><rt>きょくち</rt></ruby>：最果ての土地。また、地球上の南極および北極地方を指す。</p>",
-      "<p><ruby><rb>極光</rb><rt>きょっこう</rt></ruby>：オーロラのこと。宇宙から入ってくる電子や陽子が地球の超高層大気に衝突して発光する現象。主に極地方で見られる現象の為、このように呼ばれる。死ぬまでに一度は見てみたい。</p>"
-    ]
-  },
-  {
-    top: "山", left: "農", right: "落", bottom: "雨",
-    answer: "村", reading: "むら",
-    explanations: [
-      "<p><ruby><rb>山村</rb><rt>さんそん</rt></ruby>：山間の村。山中の村。</p>",
-      "<p><ruby><rb>農村</rb><rt>のうそん</rt></ruby>：住民の大部分が農業を<ruby><rb>生業</rb><rt>なりわい</rt></ruby>としている村落。</p>",
-      "<p><ruby><rb>村落</rb><rt>そんらく</rt></ruby>：村の人家の集まっているところ。村の集落。</p>",
-      "<p><ruby><rb>村雨</rb><rt>むらさめ</rt></ruby>：ひとしきり強く降ってやむ雨。強くなったり弱くなったりを繰り返して降る雨。にわか雨のこと。</p>"
-    ]
-  },
-  {
-    top: "水", left: "眼", right: "花", bottom: "餅",
-    answer: "鏡", reading: "かがみ",
-    explanations: [
-      "<p><ruby><rb>水鏡</rb><rt>みずかがみ</rt></ruby>：水面に姿が映ること。また、波がなく澄み切った鏡のような水面のこと。</p>",
-      "<p><ruby><rb>眼鏡</rb><rt>めがね</rt></ruby>：近視、遠視、乱視などの視力を調整したり、強い光線から目を保護したりするために用いる、凹レンズ、凸レンズ、着色ガラスなどを使った医療器具。転じて、物の善悪、可否を見きわめる能力を指す。</p>",
-      "<p><ruby><rb>鏡花</rb><rt>きょうか</rt></ruby>：鏡に映った花。見るだけで手に取ることができないもの例え。四字熟語の鏡花水月とは、水面に映る月の姿と合わせ、目には見えながら手にとることができないものを指し、言葉では表現できず、ただ心に感知するしかない物事を表す。</p>",
-      "<p><ruby><rb>鏡餅</rb><rt>かがみもち</rt></ruby>：平たく円形に作った餅を大小2個をひと重ねにし、正月や祝いのとき、神仏にお供えするもの。一番上にミカンを乗せてあることが多い。</p>"
-    ]
-  },
-  {
-    top: "戦", left: "親", right: "情", bottom: "軍",
-    answer: "友", reading: "とも",
-    explanations: [
-      "<p><ruby><rb>戦友</rb><rt>せんゆう</rt></ruby>：同じ部隊に属して生活をともにし、戦闘に従事する仲間。戦場でともに戦った友。転じて、仕事やスポーツなどで、厳しい競争を共に経験した仲間を指す。</p>",
-      "<p><ruby><rb>親友</rb><rt>しんゆう</rt></ruby>：互いに心を許し合っている友人。特に親しい友人。</p>",
-      "<p><ruby><rb>友情</rb><rt>ゆうじょう</rt></ruby>：友達の間の親愛の感情。</p>",
-      "<p><ruby><rb>友軍</rb><rt>ゆうぐん</rt></ruby>：味方の軍隊。</p>"
-    ]
-  },
-  {
-    top: "紅", left: "落", right: "巻", bottom: "月",
-    answer: "葉", reading: "は",
-    explanations: [
-      "<p><ruby><rb>紅葉</rb><rt>こうよう</rt></ruby>：植物の緑葉が秋に紅色に変わる現象。また、その紅色になった葉。秋の風物詩。</p>",
-      "<p><ruby><rb>落葉</rb><rt>らくよう</rt></ruby>：葉が落ちること。また、その落ちた葉。落ち葉。</p>",
-      "<p><ruby><rb>葉巻</rb><rt>はまき</rt></ruby>：葉を刻まずに全葉を固く巻いて棒状にしたタバコ。</p>",
-      "<p><ruby><rb>葉月</rb><rt>はづき</rt></ruby>：太陰暦の八月の異称。語源については諸説あり、「<ruby><rb>落葉月</rb><rt>おちはづき</rt></ruby>」の略称、稲穂が張る月の意味である「<ruby><rb>穂張月</rb><rt>ほばりづき</rt></ruby>」や、初めて雁が渡来する月を指す「<ruby><rb>初来</rb><rt>はつき</rt></ruby>」から転じたなどの説がある。<br>日本では、明治5年12月2日を旧暦最後の日とし、翌日を明治6年1月1日とし、新暦と呼ばれる太陽暦の西暦1873年1月1日とリンクすることになった。その為、旧暦と新暦では1～2か月のズレが生じている。</p>"
-    ]
-  },
-  {
-    top: "演", left: "武", right: "者", bottom: "術",
-    answer: "芸", reading: "げい",
-    explanations: [
-      "<p><ruby><rb>演芸</rb><rt>えんげい</rt></ruby>：衆の前で演じられる落語、漫才、講談、浪曲、曲芸、奇術、その他庶民的な演劇、音楽、舞踊などの芸の総称。</p>",
-      "<p><ruby><rb>武芸</rb><rt>ぶげい</rt></ruby>：剣、弓、馬、槍、銃砲など、武道に関する技芸。武技。武術。</p>",
-      "<p><ruby><rb>芸者</rb><rt>げいしゃ</rt></ruby>：歌舞、音曲を行って酒宴の席に興を添えることを職業とする女性。</p>",
-      "<p><ruby><rb>芸術</rb><rt>げいじゅつ</rt></ruby>：学芸と技術。また、特定の材料、様式などによって美を追求、表現しようとする人間の活動。及び、それにより作り上げられた作品。</p>"
-    ]
-  },
-  {
-    top: "砂", left: "撃", right: "拳", bottom: "壁",
-    answer: "鉄", reading: "てつ",
-    explanations: [
-      "<p><ruby><rb>砂鉄</rb><rt>さてつ</rt></ruby>：岩石中の磁鉄鉱、含チタン磁鉄鉱などが風化に伴って分離され、川や海の底に砂や小石とともに<ruby><rb>堆積</rb><rt>たいせき</rt></ruby>したもの。鉄やチタンの原料となる。</p>",
-      "<p><ruby><rb>撃鉄</rb><rt>げきてつ</rt></ruby>：小銃の撃発装置のひとつ。弾丸の発射薬を発火させるために雷管を強打する部分。</p>",
-      "<p><ruby><rb>鉄拳</rb><rt>てっけん</rt></ruby>：堅く握りしめた<ruby><rb>拳</rb><rt>こぶし</rt></ruby>。<ruby><rb>拳骨</rb><rt>げんこつ</rt></ruby>。</p>",
-      "<p><ruby><rb>鉄壁</rb><rt>てっぺき</rt></ruby>：鉄を張った壁。また、非常に堅固な城壁のこと。転じて、非常に固い守りの事を指す。伊達工の鉄壁。</p>"
-    ]
-  },
-  {
-    top: "最", left: "空", right: "間", bottom: "古",
-    answer: "中", reading: "ちゅう",
-    explanations: [
-      "<p><ruby><rb>最中</rb><rt>さいちゅう</rt></ruby>：動作、状態などが、いちばん盛んな状態にある時。現在進行中の時。</p>",
-      "<p><ruby><rb>空中</rb><rt>くうちゅう</rt></ruby>：大空の中。地面から離れた所。空。</p>",
-      "<p><ruby><rb>中間</rb><rt>ちゅうかん</rt></ruby>：物と物との空間や位置。また、物だけでなく、意見や考え方、性質など複数の事柄のどれにも片寄っていないこと。また、物事が進行している状態をさす。</p>",
-      "<p><ruby><rb>中古</rb><rt>ちゅうこ</rt></ruby>：すでに使われていて、少し古くなっていること。また、その品物。</p>"
-    ]
-  },
-  {
-    top: "発", left: "野", right: "花", bottom: "糸",
-    answer: "生", reading: "せい",
-    explanations: [
-      "<p><ruby><rb>発生</rb><rt>はっせい</rt></ruby>：物事が起こること。物体が生じること。</p>",
-      "<p><ruby><rb>野生</rb><rt>やせい</rt></ruby>：動植物が自然に山野で成長し、生育すること。</p>",
-      "<p><ruby><rb>生花</rb><rt>せいか</rt></ruby>：自然の花。造花に対していう。</p>",
-      "<p><ruby><rb>生糸</rb><rt>きいと</rt></ruby>：<ruby><rb>蚕</rb><rt>かいこ</rt></ruby>の繭から繰りとったままの、精練していない糸のこと。</p>"
-    ]
-  }
-];
-
-// ======== ゲーム変数 ========
-let quizOrder = [];
-let currentIndex = 0;
-let score = 0;
-
-// シャッフル関数
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-// ゲーム開始
-function startGame() {
-  quizOrder = shuffleArray([...Array(questions.length).keys()]).slice(0, 10);
-  currentIndex = 0;
-  score = 0;
-  document.getElementById("retry-btn").style.display = "none";
-  loadQuestion();
-}
-
-// 問題読み込み
-function loadQuestion() {
-  const q = questions[quizOrder[currentIndex]];
-  const quizArea = document.getElementById("quiz-area");
-  quizArea.innerHTML = `
-    <table>
-      <tr>
-        <td class="empty"></td>
-        <td class="blank">${q.top}</td>
-        <td class="empty"></td>
-      </tr>
-      <tr>
-        <td class="blank">${q.left}</td>
-        <td class="blank">
-          <input type="text" id="answer" maxlength="1">
-        </td>
-        <td class="blank">${q.right}</td>
-      </tr>
-      <tr>
-        <td class="empty"></td>
-        <td class="blank">${q.bottom}</td>
-        <td class="empty"></td>
-      </tr>
-    </table>
-    <button onclick="checkAnswer()">答える</button>
-  `;
-  document.getElementById("result").textContent = "";
-  document.getElementById("explanation").textContent = "";
-  document.getElementById("next-btn").style.display = "none";
-  document.getElementById("explanation").textContent = "";
-  + jumpToTop();
-}
-
-// 答え合わせ
-function checkAnswer() {
-  const q = questions[quizOrder[currentIndex]];
-  const userAnswer = document.getElementById("answer").value.trim();
-  const resultBox = document.getElementById("result");
-  const explanationBox = document.getElementById("explanation");
-
-  explanationBox.style.display = "block"; // ← ここで表示に切り替え
-  explanationBox.innerHTML = q.explanations.map(e => `<div>${e}</div>`).join("");
-
-  if (userAnswer === q.answer) {
-    resultBox.innerHTML = `正解！ 🎉 <ruby><rb>${q.answer}</rb><rt>${q.reading}</rt></ruby>`;
-    resultBox.style.color = "green";
-    score++;
-  } else {
-    resultBox.innerHTML = `残念…正解は <ruby><rb>${q.answer}</rb><rt>${q.reading}</rt></ruby>`;
-    resultBox.style.color = "red";
-  }
-
-  explanationBox.innerHTML = q.explanations.map(e => `<div>${e}</div>`).join("");
-  document.getElementById("next-btn").style.display = "inline-block";
-  document.querySelector('button[onclick="checkAnswer()"]').disabled = true;
-
-  // 10問目なら「結果発表」に切り替え
-  if (currentIndex === 9) { // 0スタートなので9が10問目
-    document.getElementById("next-btn").textContent = "結果発表";
-  } else {
-    document.getElementById("next-btn").textContent = "次の問題へ";
-  }
-}
-
-
-// 次の問題へ
-document.getElementById("next-btn").addEventListener("click", () => {
-  currentIndex++;
-  if (currentIndex < quizOrder.length) {
-    loadQuestion();
-  } else {
-    endGame();
-  }
-});
-
-// ゲーム終了
-function endGame() {
-  document.getElementById("quiz-area").innerHTML =
-    `<h2>お疲れ様でした！あなたのスコアは ${score} / ${quizOrder.length} です。</h2>`;
-  document.getElementById("result").textContent = "";
-  document.getElementById("explanation").textContent = "";
-  document.getElementById("next-btn").style.display = "none";
-  document.getElementById("retry-btn").style.display = "inline-block";
-  + jumpToTop();
-}
-
-// やり直し
-document.getElementById("retry-btn").addEventListener("click", startGame);
-
-// 初期化
-startGame();
-
-// ページ先頭へ（モバイル対策：まずキーボードを閉じる）
-function jumpToTop() {
-  if (document.activeElement && typeof document.activeElement.blur === "function") {
-    document.activeElement.blur();
-  }
-  requestAnimationFrame(() => {
-    // 見出し位置までスクロール（無ければウィンドウ最上部へ）
-    const topEl = document.querySelector('h1');
-    if (topEl && topEl.scrollIntoView) {
-      topEl.scrollIntoView({ behavior: 'auto', block: 'start' });
-    } else {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    }
-    // 念のためのフォールバック
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  });
-}
-</script>
 
 </body>
 </html>
