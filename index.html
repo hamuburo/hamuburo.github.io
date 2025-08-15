@@ -51,10 +51,12 @@
   }
   .explanation {
     margin-top: 10px;
-    font-size: 22px;
-    text-align: left;
-    display: inline-block;
+    font-size: 22spx;
+    text-align: left; /* ← 左寄せのまま */
+    display: none;
     max-width: 400px;
+    margin-left: auto;
+    margin-right: auto; /* ← これを追加して中央配置 */
   }
   #ad-space {
     margin: 20px 0;
@@ -83,7 +85,7 @@
 <button id="retry-btn" style="display:none;">最初からやり直す</button>
 
 <footer>
-  ©啓次郎 | <a href="https://forms.gle/LbM6LAJCj1NV7XqH8" target="_blank">誤字誤答報告</a> | <a href="https://hamuburo.hatenablog.com/" target="_blank">とあるおっさんの戯言</a>
+  <p>©啓次郎 | <a href="https://forms.gle/LbM6LAJCj1NV7XqH8" target="_blank">誤字誤答報告</a> | <a href="https://hamuburo.hatenablog.com/" target="_blank">とあるおっさんの戯言</a></p>
 </footer>
 
 <script>
@@ -753,6 +755,7 @@ function loadQuestion() {
   document.getElementById("result").textContent = "";
   document.getElementById("explanation").textContent = "";
   document.getElementById("next-btn").style.display = "none";
+  document.getElementById("explanation").textContent = "";
   + jumpToTop();
 }
 
@@ -762,6 +765,9 @@ function checkAnswer() {
   const userAnswer = document.getElementById("answer").value.trim();
   const resultBox = document.getElementById("result");
   const explanationBox = document.getElementById("explanation");
+
+  explanationBox.style.display = "block"; // ← ここで表示に切り替え
+  explanationBox.innerHTML = q.explanations.map(e => `<div>${e}</div>`).join("");
 
   if (userAnswer === q.answer) {
     resultBox.innerHTML = `正解！ 🎉 <ruby><rb>${q.answer}</rb><rt>${q.reading}</rt></ruby>`;
