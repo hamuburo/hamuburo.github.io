@@ -71,7 +71,49 @@
     padding: 10px 20px;
     font-size: 1em;
     cursor: pointer;
-  }</style>
+  }
+  /* スマホ用調整 */
+@media (max-width: 600px) {
+.board {
+grid-template-columns: repeat(4, 50px);
+grid-template-rows: repeat(4, 50px);
+gap: 4px;
+}
+.cell {
+width: 50px;
+height: 50px;
+font-size: 1.2em;
+}
+.hand-card {
+width: 50px;
+height: 50px;
+line-height: 50px;
+font-size: 1.1em;
+}
+.wordEntry .word {
+font-size: 1.3em;
+text-align: center;
+}
+.wordEntry .meaning {
+font-size: 1em;
+margin-top: 8px;
+text-align: center;
+}
+}
+@media screen and (max-width: 600px) {
+  #wordInfo {
+    width: 90%;         /* 画面幅に合わせる */
+    font-size: 0.9em;   /* 少し文字サイズを小さく */
+  }
+  .wordEntry .word {
+    font-size: 1.1em;   /* 単語部分は強調 */
+  }
+  .wordEntry .meaning {
+    font-size: 0.9em;   /* 意味は少し小さめ */
+  }
+}
+
+</style>
 </head>
 <body>
 <h1>漢字チャレンジパズル</h1>
