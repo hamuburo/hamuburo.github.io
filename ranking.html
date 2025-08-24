@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢字カードゲーム ランキング</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #fff9d6;
+  }
+  table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white
+  }
+  th, td {
+    border: 1px solid #333;
+    padding: 10px;
+    font-size: 1.1em;
+  }
+  th {
+    background-color: #f8f8f8;
+  }
+  caption {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  footer {
+    margin-top: 20px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<h1>漢字チャレンジパズル ランキング</h1>
+<table>
+  <caption>タイムアタックランキング</caption>
+  <thead>
+    <tr><th>順位</th><th>名前</th><th>タイム (秒)</th></tr>
+  </thead>
+  <tbody id="rankingBody">
+    <!-- ランキングがここに表示されます -->
+  </tbody>
+</table>
+<footer>
+  <button onclick="location.href='cardgame.html'">もう一度挑戦する</button>
+</footer>
+<script>
+function displayRanking() {
+  const scores = JSON.parse(localStorage.getItem('ranking')) || [];
+  const tbody = document.getElementById('rankingBody');
+  tbody.innerHTML = '';
+  scores.forEach((score, index) => {
+    const tr = document.createElement('tr');
+    const rankTd = document.createElement('td');
+    const nameTd = document.createElement('td');
+    const timeTd = document.createElement('td');
+    rankTd.innerText = index + 1;
+    nameTd.innerText = score.name;
+    timeTd.innerText = score.time;
+    tr.appendChild(rankTd);
+    tr.appendChild(nameTd);
+    tr.appendChild(timeTd);
+    tbody.appendChild(tr);
+  });
+}
+
+window.onload = displayRanking;
+</script>
+</body>
+</html>
