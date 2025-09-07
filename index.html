@@ -49,6 +49,7 @@
     font-size: 1.2em;
     border-radius: 8px;
     text-decoration: none;
+    width: 200px;
   }
   a.button:hover {
     background-color: #45a049;
@@ -90,8 +91,58 @@
   <div class="center">
   <p><a href="game-index.html" class="button">漢字穴埋め問題</a></p>
   <p><a href="cardgame-index.html" class="button">漢字チャレンジパズル</a></p>
+  <p><a id="today-kanji-link" href="kanji/0001.html" class="button">今日の漢字</a></p>
   </div>
 </div>
+
+<!-- 今日の漢字日替わりスクリプト -->
+<script>
+  // ===== 設定 =====
+  const KANJI_COUNT = 6;            // 用意している「今日の漢字」ページの数（0001～0030 など）
+  const BASE_PATH   = 'kanji';       // 置き場所のディレクトリ
+  const START_INDEX = 1;             // 先頭の番号（通常は 1）
+
+  // ===== 日本時間（JST）での日替わり判定 =====
+  function getJSTDate() {
+    // ブラウザのタイムゾーンに依存せず、日本時間で計算
+    const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+    return jstNow;
+  }
+
+  function dayOfYearJST(d) {
+    const start = new Date(Date.UTC(d.getFullYear(), 0, 1)); // 年初（UTC基準）
+    const jstMidnight = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); // JSTの日付の0時相当
+    const diffMs = jstMidnight - start;
+    return Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1; // 1～366
+  }
+
+  function pad4(n) {
+    return String(n).padStart(4, '0');
+  }
+
+  (function setTodayKanjiLink() {
+    const link = document.getElementById('today-kanji-link');
+    if (!link) return;
+
+    const jst = getJSTDate();
+    const doy = dayOfYearJST(jst); // 1～366
+    // 1～KANJI_COUNT をループ（例：1..30 を毎日ローテーション）
+    const offset = (doy - 1) % KANJI_COUNT;                 // 0～(KANJI_COUNT-1)
+    const index  = START_INDEX + offset;                    // 1～KANJI_COUNT
+    const file   = pad4(index) + '.html';                   // '0001.html' 形式
+    link.href = `${BASE_PATH}/${file}`;
+
+    // （任意）ボタン文言に当日ページ番号を入れたい場合は以下を有効化
+    // link.textContent = `今日の漢字へ（No.${index}）`;
+  })();
+</script>
+
+<!-- JS無効時の対応 -->
+<noscript>
+  <!-- JS無効時のフォールバック -->
+  <p><a href="kanji/0001.html">今日の漢字へ（フォールバック）</a></p>
+</noscript>
+
 <!-- ゲーム開始ボタンの直下に追加 -->
 <div id="update-info" style="margin-top:20px; text-align:left; max-width:500px; margin-left:auto; margin-right:auto; background:#fff; padding:10px; border-radius:8px;">
   <h3>📢 アプリ更新情報</h3>
