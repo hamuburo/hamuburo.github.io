@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+
+<meta name="description" content="四字熟語パズルは無料で遊べる脳トレゲームです。熟語や語彙を学びながら楽しく挑戦できます。高齢者から子供まで楽しめます。">
+<meta name="keywords" content="漢字, 脳トレ, 無料ゲーム, 漢字クイズ, 高齢者向け, 学習, 日本語, 熟語">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2505781446931756"
+     crossorigin="anonymous"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XHM6DHWSRX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XHM6DHWSRX');
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Game",
+  "name": "四字熟語パズル",
+  "description": "無料で遊べる漢字クイズ脳トレゲーム。高齢者から子供まで楽しめます。",
+  "genre": "Educational game",
+  "applicationCategory": "WebApplication",
+  "operatingSystem": "All",
+  "url": "https://hamuburo.github.io/",
+  "author": {
+    "@type": "Person",
+    "name": "啓次郎"
+  }
+}
+</script>
+
+<title>四字熟語パズル　｜　無料で遊べるパズルゲーム</title>
+<style>
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    background-color: #fff9d6;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: #333;
+  }
+
+  #timer {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #444;
+  }
+
+  #board {
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    grid-template-rows: repeat(5, 80px);
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .tile {
+    width: 80px;
+    height: 80px;
+    background: #fff;
+    border: 2px solid #555;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s;
+  }
+
+  .tile:active {
+    transform: scale(0.95);
+  }
+
+  #message {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+  }
+
+#result {
+  display: none;              
+  margin: 20px auto;
+  padding: 15px;
+  max-width: 500px;
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+#result .title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;     /* クリア！経過時間は中央寄せ */
+  margin-bottom: 15px;
+}
+
+#result .idiom-block {
+  margin-bottom: 15px;    /* 熟語ごとに改行スペース */
+  text-align: left;       /* ブロック全体左寄せ */
+}
+
+#result .idiom-word {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#result .idiom-meaning {
+  font-size: 16px;
+  margin-top: 3px;
+}
+
+
+</style>
+</head>
+<body>
+  <h1>四字熟語パズル</h1>
+  <div id="timer">経過時間: 0秒</div>
+  <div id="board"></div>
+  <div id="message">タイルを入れ替えて四字熟語を完成させよう！</div>
+  <div id="result"></div>
+
+  <footer>
+  <p>©啓次郎 | <a href="https://hamuburo.hatenablog.com/" target="_blank">とあるおっさんの戯言</a></p>
+  <p><a href="index.html">トップページ</a> | <a href="privacy.html">プライバシーポリシー</a></p>
+</footer>
+
+
+<script>
+const idioms = [
+  { word:"起死回生", reading:"きしかいせい", meaning:"絶望的な状況から立ち直ること。" },
+  { word:"鏡花水月", reading:"きょうかすいげつ", meaning:"鏡に映る花や水に映る月のように、目には見えても手に取ることはできないもののたとえ。" }, 
+  { word:"日進月歩", reading:"にっしんげっぽ", meaning:"日ごと月ごとに止まることなく進歩していくこと。" }, 
+  { word:"晴天白日", reading:"せいてんはくじつ", meaning:"よく晴れ渡った空と輝く太陽のこと。転じて、心にほんの少しも後ろ暗いことがないことのたとえ。" }, 
+  { word:"一日千秋", reading:"いちにちせんしゅう", meaning:"その時が来ることを今か今かと待ち焦がれること。" }, 
+  { word:"明鏡止水", reading:"めいきょうしすい", meaning:"邪念が一切なく、心が清く澄み切っている状態。無我の境地。" }, 
+  { word:"一期一会", reading:"いちごいちえ", meaning:"一生に一度の出会いを大切にすること。" },
+  { word:"破鏡不照", reading:"はきょうふしょう", meaning:"一度壊れたものは、壊れる前と同じ状態には戻らないことのたとえ。" }, 
+  { word:"温故知新", reading:"おんこちしん", meaning:"古きを学んで新しい知識を得ること。" },
+  { word:"以心伝心", reading:"いしんでんしん", meaning:"言葉を使わず心が通じ合うこと。" },
+  { word:"花鳥風月", reading:"かちょうふうげつ", meaning:"四季により移り変わる美しい自然の風景。また、そういった自然を題材に芸術活動を嗜むことをいう。" },
+  { word:"異口同音", reading:"いくどうおん", meaning:"多くの人が同じことを言うこと。" },
+  { word:"百花繚乱", reading:"ひゃっかりょうらん", meaning:"様々な種類の花が咲き乱れること。転じて、優れた能力を持つ人物が同時期に一斉に現れること。" },
+  { word:"行雲流水", reading:"こううんりゅうすい", meaning:"物事に執着せず、自然体で成り行きに任せて行動するという思想や信念。" },
+  { word:"地水火風", reading:"ちすいかふう", meaning:"仏教用語で、地と水と火と風。世の中のすべての物を構成する四つの元素。" },
+  { word:"独立独歩", reading:"どくりつどっぽ", meaning:"他人の力に頼らず、自分の力と自分の判断で自分の信じる道を進むこと。" },
+  { word:"牛歩戦術", reading:"ぎゅうほせんじゅつ", meaning:"日本の国会において、議事採決の際に少数派の反対派が議員規則の範囲内で採決を遅らせ、議事を妨害する手段。" },
+  { word:"新進気鋭", reading:"しんしんきえい", meaning:"その業界や分野に新しく現れた、鋭い視点や意気込みをもった将来有望な人物のこと。" },
+  { word:"猪突猛進", reading:"ちょとつもうしん", meaning:"周囲の状況や他の人のことは考えず、自身の目標だけを見て全力で突き進むこと。" },
+  { word:"晴雲秋月", reading:"せいうんしゅうげつ", meaning:"純真で穢れがなく、透き通っている心のたとえ。" },
+  { word:"晴耕雨読", reading:"せいこううどく", meaning:"晴れた日は外で畑を耕し、雨の日は家で読書をして過ごす様子。" },
+  { word:"明朗闊達", reading:"めいろうかったつ", meaning:"明るく朗らかで、些細なことは気にしない器の大きい様子。" },
+  { word:"天地神明", reading:"てんちしんめい", meaning:"空と大地と、そこに宿るすべての神様。" },
+  { word:"奇想天外", reading:"きそうてんがい", meaning:"普通では考えつかないほど、奇抜であること。" },
+  { word:"天叢雲剣", reading:"あまのむらくものつるぎ", meaning:"日本の天皇が皇位継承の証として代々受け継いできた三種の神器の一つ。" },
+  { word:"完全無欠", reading:"かんぜんむけつ", meaning:"欠点が全くなく完全であること。" }
+];
+
+let board = document.getElementById("board");
+let message = document.getElementById("message");
+let result = document.getElementById("result");
+let timerEl = document.getElementById("timer");
+let tiles = [];
+let startTime;
+let timerInterval;
+
+let selectedIdioms = [];
+let selectedTiles = [];
+let firstTile = null;
+
+function init() {
+  // 5つの熟語をランダム選択
+  selectedIdioms = [];
+  while (selectedIdioms.length < 5) {
+    let idiom = idioms[Math.floor(Math.random()*idioms.length)];
+    if (!selectedIdioms.includes(idiom)) selectedIdioms.push(idiom);
+  }
+
+  // 熟語の文字を並べる
+  tiles = selectedIdioms.map(i => i.word.split("")).flat();
+
+  // シャッフル
+  for (let i = tiles.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+  }
+
+  // 盤描画
+  board.innerHTML = "";
+  tiles.forEach((ch, idx) => {
+    let div = document.createElement("div");
+    div.className = "tile";
+    div.textContent = ch;
+    div.dataset.index = idx;
+    div.addEventListener("click", () => selectTile(div));
+    board.appendChild(div);
+  });
+
+  // タイマー開始
+  clearInterval(timerInterval);
+  startTime = Date.now();
+  timerInterval = setInterval(updateTimer, 500);
+}
+
+function updateTimer() {
+  let elapsed = Math.floor((Date.now() - startTime) / 1000);
+  timerEl.textContent = "経過時間: " + elapsed + "秒";
+}
+
+function selectTile(tile) {
+  if (!firstTile) {
+    firstTile = tile;
+    tile.style.background = "#ccf";
+  } else if (firstTile === tile) {
+    firstTile.style.background = "#fff";
+    firstTile = null;
+  } else {
+    swapTiles(firstTile, tile);
+    firstTile.style.background = "#fff";
+    firstTile = null;
+    checkWin();
+  }
+}
+
+function swapTiles(tile1, tile2) {
+  let tmp = tile1.textContent;
+  tile1.textContent = tile2.textContent;
+  tile2.textContent = tmp;
+}
+
+function checkWin() {
+  let rows = [];
+  for (let i = 0; i < 5; i++) {
+    rows.push(tilesRow(i));
+  }
+  let remaining = selectedIdioms.map(i => i.word);
+  for (let row of rows) {
+    let idx = remaining.indexOf(row);
+    if (idx !== -1) {
+      remaining.splice(idx, 1);
+    }
+  }
+if (remaining.length === 0) {
+  clearInterval(timerInterval);
+  let clearTime = Math.floor((Date.now() - startTime) / 1000);
+
+  // 各熟語をルビ付きでブロック化
+  let rubyText = selectedIdioms.map(i => 
+    `<div class="idiom-block">
+       <div class="idiom-word"><ruby>${i.word}<rt>${i.reading}</rt></ruby></div>
+       <div class="idiom-meaning">${i.meaning}</div>
+     </div>`
+  ).join("");
+
+  result.innerHTML = `
+    <div class="title">✨クリア！✨<br>経過時間: ${clearTime}秒</div>
+    ${rubyText}
+    <center><button id="goRanking" style="margin-top:15px; padding:5px 12px; font-size:14px; cursor:pointer;">
+      ランキングに登録
+    </button></center>
+  `;
+  result.style.display = "block";   
+
+  // ボタンクリックでランキングページへ
+  document.getElementById("goRanking").addEventListener("click", function() {
+    const yojiParam = encodeURIComponent(selectedIdioms.map(i => i.word).join(","));
+    window.location.href = "panel-ranking.html?time=" + clearTime + "&yoji=" + yojiParam;
+  });
+}
+}
+
+function tilesRow(row) {
+  let text = "";
+  for (let col = 0; col < 4; col++) {
+    text += board.children[row * 4 + col].textContent;
+  }
+  return text;
+}
+
+init();
+</script>
+</body>
+</html>

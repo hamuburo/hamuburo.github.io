@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>四字熟語パネル ランキング</title>
+  <style>
+    body {
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      text-align: center;
+      background: #fff9d6;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    #time {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 20px auto;
+      width: 80%;
+      max-width: 500px;
+      background: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+    th {
+      background: #eee;
+    }
+    input[type="text"] {
+      padding: 5px;
+      font-size: 14px;
+    }
+    button {
+      padding: 5px 12px;
+      font-size: 14px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+    a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>四字熟語パネル ランキング</h1>
+  <div id="time"></div>
+
+  <div id="form">
+    <form id="rankingForm">
+      名前: <input type="text" id="playerName" placeholder="名前を入力">
+      <button type="submit">登録</button>
+    </form>
+  </div>
+
+  <h2>ランキング</h2>
+  <table id="rankingTable">
+    <thead>
+      <tr><th>順位</th><th>名前</th><th>タイム</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+   <button><a href="panelgame.html">ゲームに戻る</a></button><br><br>
+
+  <footer>
+  ©啓次郎 | <a href="https://hamuburo.hatenablog.com/" target="_blank">とあるおっさんの戯言</a> | <a href="privacy.html">プライバシーポリシー</a>
+</footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const time = parseInt(params.get("time"));
+    const yojiParam = params.get("yoji");
+
+    // 出題された四字熟語リスト
+    const yojiList = yojiParam ? decodeURIComponent(yojiParam).split(",") : [];
+
+    if (time) {
+      document.getElementById("time").textContent = "クリアタイム: " + time + "秒";
+    }
+
+    // ランキング取得
+    function loadRanking() {
+      return JSON.parse(localStorage.getItem("yojiRanking") || "[]");
+    }
+
+    // ランキング保存
+    function saveRanking(ranking) {
+      localStorage.setItem("yojiRanking", JSON.stringify(ranking));
+    }
+
+    // ランキング表示
+    function displayRanking() {
+      const ranking = loadRanking();
+      const tbody = document.querySelector("#rankingTable tbody");
+      tbody.innerHTML = "";
+      ranking
+        .sort((a,b) => a.time - b.time)
+        .slice(0, 10)
+        .forEach((entry, idx) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${idx+1}</td><td>${entry.name}</td><td>${entry.time}</td>`;
+          tbody.appendChild(tr);
+        });
+    }
+
+    // フォーム送信
+    document.getElementById("rankingForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let name = document.getElementById("playerName").value.trim();
+
+      // 空欄なら出題された四字熟語からランダム選択
+      if (!name && yojiList.length > 0) {
+        name = yojiList[Math.floor(Math.random() * yojiList.length)];
+      }
+
+      if (isNaN(time)) return;
+
+      const ranking = loadRanking();
+      ranking.push({name: name, time: time});
+      saveRanking(ranking);
+
+      displayRanking();
+      document.getElementById("form").style.display = "none";
+    });
+
+    // 初期表示
+    displayRanking();
+  </script>
+</body>
+</html>
