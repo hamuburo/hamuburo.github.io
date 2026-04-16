@@ -73,64 +73,99 @@
 </footer>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const time = parseInt(params.get("time"));
-    const yojiParam = params.get("yoji");
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxpI1jopKucJpDfqTIGvnzPAtMTDtOHBocoz41zyfLHeIxH6Muo-Qu9GWxdZdXTZEOcxg/exec";
 
-    // 出題された四字熟語リスト
-    const yojiList = yojiParam ? decodeURIComponent(yojiParam).split(",") : [];
+const urlParams = new URLSearchParams(window.location.search);
+const time = urlParams.get("time");
+const yojiList = JSON.parse(decodeURIComponent(urlParams.get("yoji") || "[]"));
+const myEntryId = urlParams.get("entryId");
 
-    if (time) {
-      document.getElementById("time").textContent = "クリアタイム: " + time + "秒";
+window.onload = function() {
+  if (time) {
+    document.getElementById("time").textContent = "クリアタイム: " + time + "秒";
+  } else {
+    document.getElementById("rankingForm").style.display = "none";
+  }
+  fetchRanking(); // ランキング取得
+};
+
+// GASからランキングを取得
+async function fetchRanking(targetId = null) {
+  try {
+    const response = await fetch(GAS_URL);
+    const data = await response.json();
+    displayRanking(data, targetId);
+  } catch (e) {
+    console.error("ランキング取得失敗", e);
+  }
+}
+
+// 登録処理
+async function registerScore() {
+  let name = document.getElementById("playerName").value.trim();
+  if (!name && yojiList.length > 0) {
+    // 空欄ならランダムで四字熟語を名前にする
+    name = yojiList[Math.floor(Math.random() * yojiList.length)];
+  }
+  if (!name) name = "名無し";
+
+  const btn = document.querySelector("#rankingForm button");
+  btn.disabled = true;
+  btn.textContent = "送信中...";
+
+  const postUrl = `${GAS_URL}?name=${encodeURIComponent(name)}&time=${encodeURIComponent(time)}&entryId=${encodeURIComponent(myEntryId)}`;
+
+  try {
+    const response = await fetch(postUrl);
+    const data = await response.json();
+    document.getElementById("rankingForm").style.display = "none";
+    displayRanking(data, myEntryId);
+  } catch (e) {
+    alert("登録に失敗しました。");
+    btn.disabled = false;
+    btn.textContent = "登録";
+  }
+}
+
+function displayRanking(data, targetId) {
+  const tbody = document.querySelector("#rankingTable tbody");
+  tbody.innerHTML = "";
+  
+  const top100 = data.top100 || [];
+  const myRank = data.myRank || 0;
+
+  // 上位100件を表示
+  top100.forEach((entry, idx) => {
+    const tr = document.createElement("tr");
+    if (entry.entryId === targetId) {
+      tr.style.backgroundColor = "#fff3b0";
+      tr.style.fontWeight = "bold";
     }
+    tr.innerHTML = `<td>${idx + 1}</td><td>${entry.name}</td><td>${entry.time}秒</td>`;
+    tbody.appendChild(tr);
+  });
 
-    // ランキング取得
-    function loadRanking() {
-      return JSON.parse(localStorage.getItem("yojiRanking") || "[]");
-    }
+  // 100位以下のランク外表示
+  if (myRank > 100) {
+    const dotsRow = document.createElement("tr");
+    dotsRow.innerHTML = `<td colspan="3" style="text-align:center;">︙</td>`;
+    tbody.appendChild(dotsRow);
 
-    // ランキング保存
-    function saveRanking(ranking) {
-      localStorage.setItem("yojiRanking", JSON.stringify(ranking));
-    }
+    const myRow = document.createElement("tr");
+    myRow.style.backgroundColor = "#fff3b0";
+    myRow.style.fontWeight = "bold";
+    myRow.innerHTML = `<td>${myRank}</td><td>(あなたの順位)</td><td>${time}秒</td>`;
+    tbody.appendChild(myRow);
+    
+    myRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
 
-    // ランキング表示
-    function displayRanking() {
-      const ranking = loadRanking();
-      const tbody = document.querySelector("#rankingTable tbody");
-      tbody.innerHTML = "";
-      ranking
-        .sort((a,b) => a.time - b.time)
-        .slice(0, 10)
-        .forEach((entry, idx) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `<td>${idx+1}</td><td>${entry.name}</td><td>${entry.time}</td>`;
-          tbody.appendChild(tr);
-        });
-    }
-
-    // フォーム送信
-    document.getElementById("rankingForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      let name = document.getElementById("playerName").value.trim();
-
-      // 空欄なら出題された四字熟語からランダム選択
-      if (!name && yojiList.length > 0) {
-        name = yojiList[Math.floor(Math.random() * yojiList.length)];
-      }
-
-      if (isNaN(time)) return;
-
-      const ranking = loadRanking();
-      ranking.push({name: name, time: time});
-      saveRanking(ranking);
-
-      displayRanking();
-      document.getElementById("form").style.display = "none";
-    });
-
-    // 初期表示
-    displayRanking();
+// フォームの送信イベントを設定
+document.getElementById("rankingForm").onsubmit = function(e) {
+  e.preventDefault();
+  registerScore();
+};
   </script>
 </body>
 </html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢字チャレンジパネル ランキング</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #fff9d6;
+  }
+  table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white
+  }
+  th, td {
+    border: 1px solid #333;
+    padding: 10px;
+    font-size: 1.1em;
+  }
+  th {
+    background-color: #f8f8f8;
+  }
+  caption {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  footer {
+    margin-top: 20px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<h1>漢字チャレンジパズル</h1>
+<div id="registrationForm" style="margin-bottom: 20px;">
+  <div id="timeDisplay" style="font-size: 1.2em; margin-bottom: 10px;"></div>
+  名前: <input type="text" id="playerName" placeholder="名前を入力" style="padding: 5px; font-size: 1em;">
+  <button onclick="registerScore()" style="padding: 5px 15px;">登録</button>
+  <p style="font-size: 0.8em; color: #666; margin-top: 5px;">※空欄で登録すると最後に完成した単語が名前になります</p>
+</div>
+<table>
+  <caption>タイムアタックランキング</caption>
+  <thead>
+    <tr><th>順位</th><th>名前</th><th>タイム (秒)</th></tr>
+  </thead>
+  <tbody id="rankingBody">
+    <!-- ランキングがここに表示されます -->
+  </tbody>
+</table>
+<footer>
+  <button onclick="location.href='cardgame.html'">もう一度挑戦する</button>
+  <p>©啓次郎 | <a href="https://forms.gle/LbM6LAJCj1NV7XqH8" target="_blank">誤字誤答報告</a> | <a href="https://hamuburo.hatenablog.com/" target="_blank">とあるおっさんの戯言</a></p>
+  <p><a href="index.html">トップページ</a> | <a href="privacy.html">プライバシーポリシー</a></p>
+</footer>
+<script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxlwJh3eSockaYfeFMs-JauYBd7f60SjaZM0Dnm7Jcs0HD9RSzdBsu1CTGSxVuXt4Os/exec";
+
+const urlParams = new URLSearchParams(window.location.search);
+const clearTime = urlParams.get('time');
+const lastWord = urlParams.get('word');
+const secondLastWord = urlParams.get('word2');
+const myEntryId = urlParams.get('entryId'); // cardgameから渡されたID
+
+window.onload = function() {
+  if (clearTime) {
+    document.getElementById("timeDisplay").textContent = "クリアタイム: " + clearTime + "秒";
+  } else {
+    document.getElementById("registrationForm").style.display = "none";
+  }
+  fetchRanking(); // 最初にランキングを読み込む
+};
+
+// ランキングを取得して表示する関数
+async function fetchRanking(targetId = null) {
+  try {
+    const response = await fetch(GAS_URL);
+    const data = await response.json();
+    displayRanking(data, targetId);
+  } catch (e) {
+    console.error("ランキングの取得に失敗しました", e);
+  }
+}
+
+// 登録ボタンが押された時の処理
+async function registerScore() {
+  let name = document.getElementById("playerName").value.trim();
+  if (!name) {
+    if (secondLastWord && lastWord) {
+      name = decodeURIComponent(secondLastWord) + " " + decodeURIComponent(lastWord);
+    } else {
+      name = lastWord ? decodeURIComponent(lastWord) : "名無し";
+    }
+  }
+
+  const btn = document.querySelector("#registrationForm button");
+  btn.disabled = true;
+  btn.textContent = "送信中...";
+
+  // GASへデータを送信
+  const postUrl = `${GAS_URL}?name=${encodeURIComponent(name)}&time=${encodeURIComponent(clearTime)}&entryId=${encodeURIComponent(myEntryId)}`;
+
+  try {
+    const response = await fetch(postUrl);
+    const data = await response.json();
+    
+    document.getElementById("registrationForm").style.display = "none";
+    // 自分のIDを渡してランキングを再表示
+    displayRanking(data, myEntryId);
+  } catch (e) {
+    alert("登録に失敗しました。時間をおいて再度お試しください。");
+    btn.disabled = false;
+    btn.textContent = "登録";
+  }
+}
+
+function displayRanking(data, targetId) {
+  const tbody = document.getElementById('rankingBody');
+  tbody.innerHTML = '';
+  
+  const rankingData = data.top100;
+  const myRank = data.myRank;
+
+  // 1. 上位100件を表示
+  rankingData.forEach((score, index) => {
+    const tr = document.createElement('tr');
+    // 自分の登録データなら色を変える
+    if (score.entryId === targetId || (targetId && score.isNew)) {
+      tr.style.backgroundColor = "#fff3b0"; 
+      tr.style.fontWeight = "bold";
+    }
+    tr.innerHTML = `<td>${index + 1}</td><td>${score.name}</td><td>${score.time}秒</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // 2. 100位以下のランク外表示
+  if (myRank > 100) {
+    const dotsRow = document.createElement('tr');
+    dotsRow.innerHTML = `<td colspan="3" style="text-align:center;">︙</td>`;
+    tbody.appendChild(dotsRow);
+
+    const myRow = document.createElement('tr');
+    myRow.style.backgroundColor = "#fff3b0";
+    myRow.style.fontWeight = "bold";
+    myRow.innerHTML = `<td>${myRank}</td><td>(あなたの順位)</td><td>${clearTime}秒</td>`;
+    tbody.appendChild(myRow);
+    
+    myRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+</script>
+
+</body>
+</html>

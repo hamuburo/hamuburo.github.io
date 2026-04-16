@@ -199,7 +199,17 @@ const idioms = [
   { word:"五蘊盛苦", reading:"ごうんじょうく", meaning:"五蘊（「色（身体）」「受（感覚）」「想（概念）」「行（決意）」「識（認識）」）に執着することで生まれる苦しみ。" },
   { word:"四苦八苦", reading:"しくはっく", meaning:"とても苦労すること。仏教用語であらゆる苦しみという意味。四苦は「生」「労」「病」「死」。八苦は四苦にさらに「愛別離苦」「怨憎会苦」「求不得苦」「五蘊盛苦」の四つを加えたもの。" },
   { word:"天衣無縫", reading:"てんいむほう", meaning:"詩や文章などにわざとらしさがなく、自然で美しいこと。また、無邪気で飾り気のない人柄のこと。" },
-  { word:"都道府県", reading:"とどうふけん", meaning:"日本の市町村を包括する広域公共団体である「都」「道」「府」「県」の総称。現在は1都1道2府43県で合計47つある。" }
+  { word:"都道府県", reading:"とどうふけん", meaning:"日本の市町村を包括する広域公共団体である「都」「道」「府」「県」の総称。現在は1都1道2府43県で合計47つある。" },
+  { word:"合縁奇縁", reading:"あいえんきえん", meaning:"人と人の縁は奇妙な巡り合わせであり、出会いは運命であるということ。" },
+  { word:"複雑怪奇", reading:"ふくざつかいき", meaning:"様々な要因が絡み合いつつ、常識では考えられないこともあり、なんだかよくわからないこと。" },
+  { word:"一心不乱", reading:"いっしんふらん", meaning:"他のことに心を奪われ乱されることなく、ひとつのことに集中すること。ひたすらまっすぐにひとつのことに打ち込むこと。" },
+  { word:"一石二鳥", reading:"いっせきにちょう", meaning:"一つの行動で二つの利益を得ること。または、ひとつ行動で同時に二つの目的を達成すること。" },
+  { word:"七転八倒", reading:"しちてんばっとう", meaning:"あまりにも苦痛が大きく、のたうちまわって苦しむようなこと。また、物事が大きく混乱して収拾がつかない状態。" },
+  { word:"弱肉強食", reading:"じゃくにくきょうしょく", meaning:"弱い生物は強い生物の食料になるということ。転じて、人間社会においても強い者が弱い者を犠牲に栄えていくという摂理。" },
+  { word:"勧善懲悪", reading:"かんぜんちょうあく", meaning:"善を勧め、悪を懲らしめるということ。" },
+  { word:"絶体絶命", reading:"ぜったいぜつめい", meaning:"危険や困難が迫り、どうすることもできない状況にあること。ちなみに「絶対絶命」は誤り。" },
+  { word:"前後不覚", reading:"ぜんごふかく", meaning:"前後の記憶もなくなるほど、正気を失っている状態。気絶したり、酩酊している状態をいう。" },
+  { word:"空前絶後", reading:"くうぜんぜつご", meaning:"これまでに前例がなく、これからも起こる得ないような珍しいこと。" }
 ];
 
 let board = document.getElementById("board");
@@ -308,10 +318,15 @@ if (remaining.length === 0) {
   result.style.display = "block";   
 
   // ボタンクリックでランキングページへ
-  document.getElementById("goRanking").addEventListener("click", function() {
-    const yojiParam = encodeURIComponent(selectedIdioms.map(i => i.word).join(","));
-    window.location.href = "panel-ranking.html?time=" + clearTime + "&yoji=" + yojiParam;
-  });
+  document.getElementById("goRanking").onclick = function() {
+    const yojiParam = encodeURIComponent(JSON.stringify(selectedIdioms.map(i => i.word)));
+    
+    // スプレッドシート用のユニークIDを生成
+    const myEntryId = encodeURIComponent("panel_" + clearTime + "_" + new Date().getTime());
+    
+    // ランキングページへ移動
+    location.href = `panel-ranking.html?time=${clearTime}&yoji=${yojiParam}&entryId=${myEntryId}`;
+  };
 }
 }
 
