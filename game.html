@@ -129,15 +129,19 @@
 
 <h1>漢字穴埋め問題</h1>
 
+<h3 id="status-area" style="text-align: center;">
+  経過時間: <span id="display-time">0秒</span><br>
+  現在<span id="display-score">0</span>問連続正解中！
+</h3>
+
 <div id="quiz-area"></div>
 
 <div class="result" id="result"></div>
 <div class="explanation" id="explanation"></div>
 
-<div></div>
-</div>
 
-<button id="next-btn" style="display:none;">次の問題へ</button>
+<button id="next-btn" style="display:none;">次の問題へ</button><br>
+<button id="ranking-btn" style="display:none;">ここでやめてランキング登録する</button>
 <button id="retry-btn" style="display:none;">最初からやり直す</button>
 
 <footer>
@@ -1314,6 +1318,9 @@ const questions = [
 let quizOrder = [];
 let currentIndex = 0;
 let score = 0;
+let TotalTime = 0; // 経過時間合計
+let StartTime = 0; // 各問題の開始時間
+let gameTimer; //タイマーを管理するための変数
 
 // シャッフル関数
 function shuffleArray(array) {
@@ -1323,13 +1330,39 @@ function shuffleArray(array) {
   }
   return array;
 }
+// タイマー制御
+function gameTimerDisplay() {
+  // すでに動いているタイマーがあれば一旦止める（二重起動防止）
+  clearInterval(gameTimer);
+
+  gameTimer = setInterval(() => {
+    // 今の時刻と、問題開始時の時刻の差を出す
+    let now = Date.now();
+    let currentSessionTime = now - StartTime; 
+    
+    // これまでの合計時間に、今解いている最中の時間を足す
+    let totalMs = TotalTime + currentSessionTime;
+    
+    // 秒に直して表示
+    let totalSec = Math.floor(totalMs / 1000);
+    document.getElementById("display-time").textContent = totalSec + "秒";
+  }, 1000); // 1000ミリ秒（1秒）ごとに実行
+}
 
 // ゲーム開始
 function startGame() {
-  quizOrder = shuffleArray([...Array(questions.length).keys()]).slice(0, 10);
+  quizOrder = shuffleArray([...Array(questions.length).keys()]);
   currentIndex = 0;
   score = 0;
+  TotalTime = 0; // 経過時間合計
+  StartTime = 0; // 各問題の開始時間
+  
+  // 画面表示も0に戻す
+  document.getElementById("display-time").textContent = "0秒";
+  document.getElementById("display-score").textContent = "0";
+
   document.getElementById("retry-btn").style.display = "none";
+  document.getElementById("ranking-btn").style.display = "none";
   loadQuestion();
 }
 
@@ -1357,24 +1390,34 @@ function loadQuestion() {
         <td class="empty"></td>
       </tr>
     </table>
+    <br>
     <button onclick="checkAnswer()">答える</button>
   `;
   document.getElementById("result").textContent = "";
   document.getElementById("explanation").textContent = "";
   document.getElementById("next-btn").style.display = "none";
-  document.getElementById("explanation").textContent = "";
-  + jumpToTop();
+  document.getElementById("ranking-btn").style.display = "none";
+  document.getElementById("ranking-btn").textContent = "ここでやめてランキング登録する";
+  StartTime = Date.now();
+  gameTimerDisplay();    // ★タイマー始動！
+  jumpToTop();
 }
 
 // 答え合わせ
 function checkAnswer() {
+  clearInterval(gameTimer); // ★まずはタイマーを止める！
+
+  let now = Date.now();
+  let ClearTime = now - StartTime;
+  TotalTime = TotalTime + ClearTime;
+  
   const q = questions[quizOrder[currentIndex]];
   const userAnswer = document.getElementById("answer").value.trim();
   const resultBox = document.getElementById("result");
   const explanationBox = document.getElementById("explanation");
 
   explanationBox.style.display = "block"; // ← ここで表示に切り替え
-  explanationBox.innerHTML = q.explanations.map(e => `<div>${e}</div>`).join("");
+  explanationBox.innerHTML = q.explanations.join("");
 
   if (userAnswer === q.answer) {
     resultBox.innerHTML = `正解！ 🎉 <ruby><rb>${q.answer}</rb><rt>${q.reading}</rt></ruby>`;
@@ -1384,18 +1427,56 @@ function checkAnswer() {
     resultBox.innerHTML = `残念…正解は <ruby><rb>${q.answer}</rb><rt>${q.reading}</rt></ruby>`;
     resultBox.style.color = "red";
   }
+  
+  // ★ここで画面上の数字を更新する！
+  let currentSec = Math.floor(TotalTime / 1000);
+  document.getElementById("display-time").textContent = currentSec + "秒";
+  document.getElementById("display-score").textContent = score;
 
-  explanationBox.innerHTML = q.explanations.map(e => `<div>${e}</div>`).join("");
-  document.getElementById("next-btn").style.display = "inline-block";
+  // --- ボタンの表示処理 ---
+  
+  // 1. まず回答ボタンをロックする（これは共通）
   document.querySelector('button[onclick="checkAnswer()"]').disabled = true;
 
-  // 10問目なら「結果発表」に切り替え
-  if (currentIndex === 9) { // 0スタートなので9が10問目
-    document.getElementById("next-btn").textContent = "結果発表";
-  } else {
+  // 2. 正解・不正解で「出すボタン」と「隠すボタン」をハッキリ分ける
+  if (userAnswer === q.answer) {
+    // 【正解の時】
+    document.getElementById("next-btn").style.display = "block";    // 次へを出す
+    document.getElementById("next-btn").style.margin = "40px auto 10px auto";
+    document.getElementById("ranking-btn").style.display = "block"; // ランキングも出す
+    document.getElementById("ranking-btn").style.margin = "10px auto";
+
+    // 表示させた後に、文字を流し込む
     document.getElementById("next-btn").textContent = "次の問題へ";
-  }
-}
+    document.getElementById("ranking-btn").textContent = "ここでやめてランキング登録する";
+  } 
+  else {
+    // 【不正解の時】
+    document.getElementById("next-btn").style.display = "none";     // 次へは絶対隠す
+
+   if (score > 0) {
+      // 1問以上正解：ランキングボタンを表示
+      document.getElementById("ranking-btn").style.display = "block";
+      document.getElementById("ranking-btn").style.margin = "40px auto 10px auto";
+      document.getElementById("ranking-btn").textContent = "ランキングに登録する";
+      
+      // リトライボタン（もしあれば）は隠す
+      if(document.getElementById("retry-btn")) {
+        document.getElementById("retry-btn").style.display = "none";
+      }
+    } else {
+      // 0問正解（1問目でミス）：ランキングボタンを隠し、リトライボタンを表示
+      document.getElementById("ranking-btn").style.display = "none";
+      
+      // もしHTMLにリトライボタン（retry-btn）がある場合、それを表示させる
+      const retryBtn = document.getElementById("retry-btn");
+      if (retryBtn) {
+        retryBtn.style.display = "block";
+        retryBtn.style.margin = "40px auto 10px auto";
+        retryBtn.textContent = "もう一度挑戦する";
+      }
+}}}
+
 
 
 // 次の問題へ
@@ -1410,17 +1491,70 @@ document.getElementById("next-btn").addEventListener("click", () => {
 
 // ゲーム終了
 function endGame() {
-  document.getElementById("quiz-area").innerHTML =
-    `<h2>お疲れ様でした！あなたのスコアは ${score} / ${quizOrder.length} です。</h2>`;
+  // --- タイムを「〇分〇秒」に変換する ---
+  let totalSeconds = Math.floor(TotalTime / 1000); // ミリ秒を秒に直す
+  let minutes = Math.floor(totalSeconds / 60);    // 分を計算
+  let seconds = totalSeconds % 60;                // 余りの秒を計算
+
+
+  
+  // 表示用の文字列を作る
+  let timeString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+
+  // 1. クイズエリアを「お祝いの画面」に書き換える
+  document.getElementById("quiz-area").innerHTML = `
+    <div style="text-align: center;">
+      <h2>🎊 全問完走、おめでとうございます！ 🎊</h2>
+      <p style="font-size: 1.2em; margin: 20px 0;">
+        あなたは全 ${quizOrder.length} 問という、<br>
+        気の遠くなるような「言葉の壁」を<br>
+        すべて乗り越えました。<br>
+        最大級の賛辞を贈らせて頂きます。<br><br>
+        本当にお疲れさまでした！</p>
+      
+      <p style="font-size: 1.1em;">
+        最終スコア：<strong>${score} 点</strong><br>
+        走破タイム：<strong>${timeString}</strong>
+      </p>    </div>
+  `;
+
+  // 2. 不要な表示を消し、再挑戦ボタンなどを整える
   document.getElementById("result").textContent = "";
   document.getElementById("explanation").textContent = "";
   document.getElementById("next-btn").style.display = "none";
-  document.getElementById("retry-btn").style.display = "inline-block";
-  + jumpToTop();
+  
+  // 3. ここがポイント！完走時もランキングへ登録できるようにします
+  document.getElementById("ranking-btn").style.display = "block";
+  document.getElementById("ranking-btn").style.margin = "30px auto";
+  document.getElementById("ranking-btn").textContent = "この記録をランキングに刻む";
+
+  // 4. リトライ（最初から）ボタンも中央に出しておく
+  document.getElementById("retry-btn").style.display = "block";
+  document.getElementById("retry-btn").style.margin = "10px auto";
 }
 
 // やり直し
 document.getElementById("retry-btn").addEventListener("click", startGame);
+
+// ランキング登録画面へジャンプする関数
+function sendToRanking() {
+  // 1. ミリ秒を「〇分〇秒」の形式に整える
+  let totalSeconds = Math.floor(TotalTime / 1000);
+
+  // 最後に解いた問題のデータを取得
+  const q = questions[quizOrder[currentIndex]];
+
+  // 2. 送信先のURLを作る（スコアと時間をパラメータとしてくっつける）
+  // 先ほどアップロードされた「game-ranking.html」へ飛びます
+  // URLに ans, top, bottom を追加してジャンプ
+  const rankingUrl = `game-ranking.html?score=${score}&time=${totalSeconds}&ans=${encodeURIComponent(q.answer)}&top=${encodeURIComponent(q.top)}&bottom=${encodeURIComponent(q.bottom)}`;
+
+  // 3. ランキング画面へ画面遷移
+  window.location.href = rankingUrl;
+}
+
+// ランキングボタンをクリックした時にこの関数が動くように紐付け
+document.getElementById("ranking-btn").addEventListener("click", sendToRanking);
 
 // 初期化
 startGame();

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta name="description" content="漢字チャレンジパズルは無料で遊べる脳トレゲームです。熟語や語彙を学びながら楽しく挑戦できます。高齢者から子供まで楽しめます。">
+<meta name="keywords" content="漢字, 脳トレ, 無料ゲーム, 漢字クイズ, 高齢者向け, 学習, 日本語, 熟語">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2505781446931756"
+     crossorigin="anonymous"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XHM6DHWSRX"></script>
+
+  <title>漢字穴埋め ランキング</title>
+  <style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #fff9d6;
+    margin: 0;
+    padding: 20px 10px; /* 左右に少し余白を作る */
+  }
+
+  table {
+    width: 95%;           /* cardgameに合わせる */
+    max-width: 600px;     /* 広がりすぎ防止 */
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  }
+
+  th, td {
+    border: 1px solid #333; /* cardgameの濃い色に合わせる */
+    padding: 10px;          /* cardgameと同じ余白 */
+    font-size: 1.1em;
+  }
+
+  th {
+    background-color: #f8f8f8;
+  }
+
+  /* スマホ用の微調整（cardgameのバランスに統合） */
+  @media screen and (max-width: 600px) {
+    th, td {
+      padding: 8px 4px;
+      font-size: 1.0em; /* cardgameに近いサイズ感に */
+    }
+    h1 {
+      font-size: 1.5em;
+    }
+  }
+  </style>
+</head>
+<body>
+  <h1>漢字穴埋め ランキング</h1>
+  <div id="time"></div>
+
+  <div id="form">
+    <form id="rankingForm">
+      名前: <input type="text" id="playerName" placeholder="名前を入力">
+      <button type="submit">登録</button>
+    </form>
+  </div>
+
+  <h2>ランキング</h2>
+  <table id="rankingTable">
+    <thead>
+      <tr><th>順位</th><th>名前</th><th>連続正解数</th><th>タイム</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+   <button><a href="game.html">ゲームに戻る</a></button><br><br>
+
+  <footer>
+  ©啓次郎 | <a href="https://hamuburo.hatenablog.com/" target="_blank">とあるおっさんの戯言</a><br>
+  <a href="https://hamuburo.github.io/">脳トレゲーム集</a> | <a href="privacy.html">プライバシーポリシー</a>
+</footer>
+
+  <script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwYlu7k7LexiWk2qLj1gswyMe5-HG68vAc5kWMdsmY2R7fmTwLtfzosf6J7bfCLpuIu/exec";
+
+const urlParams = new URLSearchParams(window.location.search);
+const time = urlParams.get("time");
+const score = urlParams.get("score");
+const yojiList = JSON.parse(decodeURIComponent(urlParams.get("yoji") || "[]"));
+const myEntryId = urlParams.get("entryId");
+
+window.onload = function() {
+  if (time && score) {
+    // ★ ここで秒数を「分・秒」に変換する
+    let displayTime = "";
+    // timeはURLから取得した秒数（数値）
+    let t = parseInt(time); 
+    if (t >= 60) {
+      displayTime = Math.floor(t / 60) + "分" + (t % 60) + "秒";
+    } else {
+      displayTime = t + "秒";
+    }
+
+    // 画面に「〇問 / 〇分〇秒」と表示
+    document.getElementById("time").innerHTML =
+      `最終スコア: <strong>${score}問正解！</strong><br>タイム：<strong>${displayTime}</strong>` ;
+  } else {
+    document.getElementById("rankingForm").style.display = "none";
+  }
+  fetchRanking(); // ランキング取得
+};
+
+
+// GASからランキングを取得
+async function fetchRanking(targetId = null) {
+  try {
+    const response = await fetch(GAS_URL);
+    const data = await response.json();
+    displayRanking(data, targetId);
+  } catch (e) {
+    console.error("ランキング取得失敗", e);
+  }
+}
+
+// 登録処理
+async function registerScore() {
+  let name = document.getElementById("playerName").value.trim();
+  
+  // --- 名前が空欄だった時の処理 ---
+  if (!name) {
+    // URLから問題の情報を取得（あらかじめgame側から送っておく必要があります）
+    const urlParams = new URLSearchParams(window.location.search);
+    const ans = urlParams.get("ans") || "";
+    const top = urlParams.get("top") || "";
+    const bottom = urlParams.get("bottom") || "";
+    
+    if (ans && top && bottom) {
+      // 「正解+下 上+正解」の組み合わせを作る
+      name = `${ans}${bottom} ${top}${ans}`;
+    } else {
+      name = "no name"; // 万が一データがない場合の予備
+    }
+  }
+
+  const generatedID = name + "_" + new Date().getTime();
+
+  const btn = document.querySelector("#rankingForm button");
+  btn.disabled = true;
+  btn.textContent = "送信中...";
+
+  const postUrl = `${GAS_URL}?name=${encodeURIComponent(name)}&time=${encodeURIComponent(time)}&score=${encodeURIComponent(score)}&entryId=${encodeURIComponent(generatedID)}`;
+
+  try {
+    const response = await fetch(postUrl);
+    const data = await response.json();
+    document.getElementById("rankingForm").style.display = "none";
+    displayRanking(data, generatedID);
+  } catch (e) {
+    alert("登録に失敗しました。");
+    btn.disabled = false;
+    btn.textContent = "登録";
+  }
+}
+
+function displayRanking(data, targetId) {
+  const tbody = document.querySelector("#rankingTable tbody");
+  tbody.innerHTML = "";
+  
+  const top100 = data.top100 || [];
+  const myRank = data.myRank || 0;
+
+  // 上位100件を表示
+  top100.forEach((entry, idx) => {
+    const tr = document.createElement("tr");
+
+    let displayTime = "";
+    if(entry.time>=60){
+      displayTime = Math.floor(entry.time / 60) + "分" + (entry.time % 60) + "秒";
+  }
+    else {
+    displayTime = entry.time + "秒";
+  };
+   
+
+    if (entry.entryId === targetId) {
+      tr.style.backgroundColor = "#fff3b0";
+      tr.style.fontWeight = "bold";
+    }
+    tr.innerHTML = `<td>${idx + 1}</td><td>${entry.name}</td><td>${entry.score || 0}問</td><td>${displayTime}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // 100位以下のランク外表示
+  if (myRank > 100) {
+    const dotsRow = document.createElement("tr");
+    dotsRow.innerHTML = `<td colspan="4" style="text-align:center;">︙</td>`;
+    tbody.appendChild(dotsRow);
+
+// ★ 自分の順位用のタイムを改めて計算する
+    let myDisplayTime = "";
+    if (time >= 60) {
+      myDisplayTime = Math.floor(time / 60) + "分" + (time % 60) + "秒";
+    } else {
+      myDisplayTime = time + "秒";
+    }
+
+    const myRow = document.createElement("tr");
+    myRow.style.backgroundColor = "#fff3b0";
+    myRow.style.fontWeight = "bold";
+    // ★ myDisplayTime を使用
+    myRow.innerHTML = `<td>${myRank}</td><td>(あなたの順位)</td><td>${score}問</td><td>${myDisplayTime}</td>`;
+    tbody.appendChild(myRow);
+    
+    myRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// フォームの送信イベントを設定
+document.getElementById("rankingForm").onsubmit = function(e) {
+  e.preventDefault();
+  registerScore();
+};
+  </script>
+</body>
+</html>
