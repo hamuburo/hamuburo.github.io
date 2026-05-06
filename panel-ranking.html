@@ -146,6 +146,9 @@ function displayRanking(data, targetId) {
     if (entry.entryId === targetId) {
       tr.style.backgroundColor = "#fff3b0";
       tr.style.fontWeight = "bold";
+
+      // ★ 自分のデータ（targetIdが一致する行）を作成した直後に、そこへスクロールする
+      setTimeout(() => tr.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
     }
     tr.innerHTML = `<td>${idx + 1}</td><td>${entry.name}</td><td>${entry.time}秒</td>`;
     tbody.appendChild(tr);
