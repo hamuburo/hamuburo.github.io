@@ -1238,8 +1238,8 @@ const questions = [
     explanations: [
       "<p><ruby><rb>歌姫</rb><rt>うたひめ</rt></ruby>：歌を巧みに歌う女性。また、歌を歌うことを職業とする女性のこと。ただし、感覚的には聴く人を全てを魅了するようなカリスマ的な存在を指すことが多い。</p>",
       "<p><ruby><rb>乙姫</rb><rt>おとひめ</rt></ruby>：海底の竜宮城に住むという伝説上の若く美しい姫様。一説には非常に嫉妬深いとされる。</p>",
-      "<p><ruby><rb>姫路</rb><rt>ひめじ</rt></ruby>：兵庫県中西部、<ruby><rt>播磨灘</rt><rb>はりまなだ</rb><ruby>に面する市。江戸時代では池田氏、本多氏、松平氏、酒井氏の城下町であった。いずれも徳川家とゆかりが深い。国宝の姫路城がある。</p>",
-      "<p><ruby><rb>姫椿</rb><rt>ひめつばき</rt></ruby>：サザンカの別名。ツバキ科の<ruby><rt>常緑小高木</rt><rb>じょうりょくしょうこうぼく</rb></ruby>。庭木として栽植されることも多い。葉はツバキにくらべてやや小形。晩秋から冬にかけ、白や薄いピンクの花をつける。また、姫椿という品種も別にある。こちらはツバキ科の<ruby><rt>常緑高木</rt><rb>じょうりょくこうぼく</rb></ruby>。葉は枝先に集まってつき、長楕円形。5、6月頃に、白い花を咲かせる。小笠原諸島の特産。</p>"
+      "<p><ruby><rb>姫路</rb><rt>ひめじ</rt></ruby>：兵庫県中西部、<ruby><rb>播磨灘</rb><rt>はりまなだ</rt><ruby>に面する市。江戸時代では池田氏、本多氏、松平氏、酒井氏の城下町であった。いずれも徳川家とゆかりが深い。国宝の姫路城がある。</p>",
+      "<p><ruby><rb>姫椿</rb><rt>ひめつばき</rt></ruby>：サザンカの別名。ツバキ科の<ruby><rb>常緑小高木</rb><rt>じょうりょくしょうこうぼく</rt></ruby>。庭木として栽植されることも多い。葉はツバキにくらべてやや小形。晩秋から冬にかけ、白や薄いピンクの花をつける。また、姫椿という品種も別にある。こちらはツバキ科の<ruby><rb>常緑高木</rb><rt>じょうりょくこうぼく</rt></ruby>。葉は枝先に集まってつき、長楕円形。5、6月頃に、白い花を咲かせる。小笠原諸島の特産。</p>"
     ]
   },
   {
@@ -1380,7 +1380,7 @@ function loadQuestion() {
       <tr>
         <td class="blank">${q.left}</td>
         <td class="blank">
-          <input type="text" id="answer" maxlength="1">
+          <input type="text" id="answer" maxlength="1" onkeypress="handleKeyPress(event)">
         </td>
         <td class="blank">${q.right}</td>
       </tr>
@@ -1401,6 +1401,13 @@ function loadQuestion() {
   StartTime = Date.now();
   gameTimerDisplay();    // ★タイマー始動！
   jumpToTop();
+}
+
+// エンターキーが押された時にチェック処理を呼ぶ関数
+function handleKeyPress(event) {
+  if (event.key === 'Enter') {
+    checkAnswer(); // 正誤判定を行う関数（既存のものを流用）
+  }
 }
 
 // 答え合わせ
