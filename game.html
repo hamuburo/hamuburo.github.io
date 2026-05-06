@@ -1380,7 +1380,7 @@ function loadQuestion() {
       <tr>
         <td class="blank">${q.left}</td>
         <td class="blank">
-          <input type="text" id="answer" maxlength="1" onkeypress="handleKeyPress(event)">
+          <input type="text" id="answer" maxlength="1" onkeydown="handleKeyPress(event)" enterkeyhint="done">
         </td>
         <td class="blank">${q.right}</td>
       </tr>
@@ -1405,7 +1405,7 @@ function loadQuestion() {
 
 // エンターキーが押された時にチェック処理を呼ぶ関数
 function handleKeyPress(event) {
-  if (event.key === 'Enter') {
+  if (event.key === 'Enter' && !event.isComposing) {
     checkAnswer(); // 正誤判定を行う関数（既存のものを流用）
   }
 }
